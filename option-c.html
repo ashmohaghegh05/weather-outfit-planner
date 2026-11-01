@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Weather Outfit Planner — Option C</title>
+
+    <style>
+        :root {
+            --paper: #f6f3ea;
+            --ink: #16202a;
+            --muted: #66717c;
+            --line: #c8c1b5;
+            --navy: #18324a;
+            --blue: #2f6f8f;
+            --blue-soft: #dbe9ef;
+            --warm: #b86f3c;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            background-color: var(--paper);
+            color: var(--ink);
+        }
+
+        main {
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 34px 24px 70px;
+        }
+
+        .masthead {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .brand {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .issue {
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--muted);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-align: right;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.4fr 0.6fr;
+            gap: 50px;
+            padding: 56px 0 48px;
+            border-bottom: 3px double var(--ink);
+        }
+
+        .hero-kicker {
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--warm);
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1.8px;
+            margin: 0 0 18px;
+        }
+
+        h1 {
+            font-size: clamp(54px, 8vw, 96px);
+            line-height: 0.95;
+            letter-spacing: -0.04em;
+            margin: 0;
+            max-width: 760px;
+        }
+
+        .hero-copy {
+            align-self: end;
+            margin: 0;
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .search-wrap {
+            padding: 30px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .search-label {
+            display: block;
+            margin-bottom: 10px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1.6px;
+        }
+
+        .search-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+        }
+
+        .search-row input {
+            min-width: 0;
+            padding: 15px 16px;
+            font: inherit;
+            font-size: 17px;
+            background-color: transparent;
+            border: 1px solid var(--ink);
+            color: var(--ink);
+        }
+
+        .search-row button {
+            padding: 15px 24px;
+            border: 1px solid var(--navy);
+            background-color: var(--navy);
+            color: var(--white);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .brief {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 0;
+            margin-top: 46px;
+            border: 1px solid var(--ink);
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        .recommendation {
+            padding: 36px;
+            border-right: 1px solid var(--ink);
+        }
+
+        .section-label {
+            margin: 0 0 24px;
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--blue);
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1.8px;
+        }
+
+        .location {
+            margin: 0 0 8px;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .conditions {
+            margin: 0 0 34px;
+            color: var(--muted);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .recommendation-text {
+            margin: 0;
+            max-width: 760px;
+            font-size: clamp(34px, 4vw, 58px);
+            line-height: 1.04;
+            letter-spacing: -0.025em;
+        }
+
+        .reason {
+            margin-top: 30px;
+            max-width: 650px;
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.65;
+        }
+
+        .data-panel {
+            padding: 28px 30px;
+            background-color: var(--blue-soft);
+        }
+
+        .passport-number {
+            margin: 0 0 24px;
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--muted);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.4px;
+        }
+
+        .metric {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px;
+            padding: 16px 0;
+            border-top: 1px solid rgba(22, 32, 42, 0.18);
+        }
+
+        .metric:first-of-type {
+            border-top: none;
+        }
+
+        .metric-label {
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--muted);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .packing {
+            margin-top: 26px;
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 30px;
+            padding: 28px 0;
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .packing h2 {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.8px;
+            color: var(--warm);
+        }
+
+        .packing p {
+            margin: 0;
+            font-size: 20px;
+            line-height: 1.55;
+        }
+
+        .tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+
+        .tag {
+            padding: 9px 11px;
+            border: 1px solid var(--line);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background-color: rgba(255,255,255,0.28);
+        }
+
+        footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 36px;
+            padding-top: 16px;
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--muted);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.3px;
+        }
+
+        @media (max-width: 760px) {
+
+            .masthead,
+            footer {
+                flex-direction: column;
+            }
+
+            .issue {
+                text-align: left;
+            }
+
+            .hero,
+            .brief,
+            .packing {
+                grid-template-columns: 1fr;
+            }
+
+            .brief {
+                border: 1px solid var(--ink);
+            }
+
+            .recommendation {
+                border-right: none;
+                border-bottom: 1px solid var(--ink);
+            }
+
+            .search-row {
+                grid-template-columns: 1fr;
+            }
+
+            .search-row button {
+                width: 100%;
+            }
+
+            .packing {
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main>
+
+        <header class="masthead">
+
+            <div class="brand">
+                Weather Outfit Planner / Option C
+            </div>
+
+            <div class="issue">
+                Forecast Brief · Daily Edition
+            </div>
+
+        </header>
+
+
+        <section class="hero">
+
+            <div>
+
+                <p class="hero-kicker">
+                    Personal Weather Brief
+                </p>
+
+                <h1>
+                    Forecast first.<br>
+                    Dress second.
+                </h1>
+
+            </div>
+
+            <p class="hero-copy">
+                Enter a city and turn the forecast into a simple clothing
+                and preparation decision before you leave.
+            </p>
+
+        </section>
+
+
+        <section class="search-wrap">
+
+            <label class="search-label" for="city">
+                Destination
+            </label>
+
+            <div class="search-row">
+
+                <input
+                    id="city"
+                    type="text"
+                    placeholder="Boston"
+                >
+
+                <button type="button">
+                    Prepare Brief
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <section class="brief">
+
+            <article class="recommendation">
+
+                <p class="section-label">
+                    Today's Recommendation
+                </p>
+
+                <p class="location">
+                    Boston, United States
+                </p>
+
+                <p class="conditions">
+                    Light rain · Cool · Windy
+                </p>
+
+                <p class="recommendation-text">
+                    Wear a light jacket and bring an umbrella.
+                </p>
+
+                <p class="reason">
+                    The forecast stays cool throughout the day, rain is likely,
+                    and the wind makes the temperature feel colder than the
+                    headline number suggests.
+                </p>
+
+                <div class="tags">
+
+                    <span class="tag">
+                        Light Jacket
+                    </span>
+
+                    <span class="tag">
+                        Umbrella
+                    </span>
+
+                    <span class="tag">
+                        Rain-Ready Shoes
+                    </span>
+
+                </div>
+
+            </article>
+
+
+            <aside class="data-panel">
+
+                <p class="passport-number">
+                    Forecast Record 001
+                </p>
+
+                <div class="metric">
+
+                    <span class="metric-label">
+                        High
+                    </span>
+
+                    <span class="metric-value">
+                        58°F
+                    </span>
+
+                </div>
+
+                <div class="metric">
+
+                    <span class="metric-label">
+                        Low
+                    </span>
+
+                    <span class="metric-value">
+                        44°F
+                    </span>
+
+                </div>
+
+                <div class="metric">
+
+                    <span class="metric-label">
+                        Feels Like
+                    </span>
+
+                    <span class="metric-value">
+                        41°F
+                    </span>
+
+                </div>
+
+                <div class="metric">
+
+                    <span class="metric-label">
+                        Rain Chance
+                    </span>
+
+                    <span class="metric-value">
+                        70%
+                    </span>
+
+                </div>
+
+                <div class="metric">
+
+                    <span class="metric-label">
+                        Wind
+                    </span>
+
+                    <span class="metric-value">
+                        18 mph
+                    </span>
+
+                </div>
+
+            </aside>
+
+        </section>
+
+
+        <section class="packing">
+
+            <h2>
+                Before You Leave
+            </h2>
+
+            <p>
+                Take an umbrella, choose shoes that can handle wet pavement,
+                and wear a light outer layer that will help with the wind.
+            </p>
+
+        </section>
+
+
+        <footer>
+
+            <span>
+                Data source: Open-Meteo
+            </span>
+
+            <span>
+                Weather → Recommendation
+            </span>
+
+        </footer>
+
+    </main>
+
+</body>
+
+</html>
