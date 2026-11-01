@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="A weather outfit planner that turns forecast data into practical clothing and preparation recommendations."
+    >
+
+    <title>Weather Outfit Planner</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="site-header">
+
+        <div class="header-inner">
+
+            <p class="brand">
+                WEATHER OUTFIT PLANNER
+            </p>
+
+            <p class="header-meta">
+                PERSONAL WEATHER BRIEF
+            </p>
+
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <section class="hero">
+
+            <div>
+
+                <p class="hero-kicker">
+                    FORECAST PASSPORT
+                </p>
+
+                <h1>
+                    Forecast first.<br>
+                    Dress second.
+                </h1>
+
+            </div>
+
+            <p class="hero-copy">
+                Search a city and turn the forecast into a simple recommendation
+                for what to wear and what to bring before you leave.
+            </p>
+
+        </section>
+
+
+        <section class="search-section"
+                 aria-labelledby="search-heading">
+
+            <div class="section-top">
+
+                <span class="section-number">
+                    01
+                </span>
+
+                <h2 id="search-heading">
+                    PREPARE YOUR BRIEF
+                </h2>
+
+            </div>
+
+
+            <form id="weather-form" novalidate>
+
+                <label for="city">
+                    CITY
+                </label>
+
+                <div class="search-row">
+
+                    <input
+                        id="city"
+                        name="city"
+                        type="text"
+                        placeholder="Boston"
+                        autocomplete="off"
+                        required
+                    >
+
+                    <button type="submit">
+                        Prepare Brief
+                    </button>
+
+                </div>
+
+                <p id="form-message"
+                   class="form-message"
+                   aria-live="polite">
+                </p>
+
+            </form>
+
+        </section>
+
+
+        <section class="result-section"
+                 aria-labelledby="result-heading">
+
+            <div class="section-top">
+
+                <span class="section-number">
+                    02
+                </span>
+
+                <h2 id="result-heading">
+                    TODAY'S BRIEF
+                </h2>
+
+            </div>
+
+
+            <div id="result-area"
+                 class="result-area">
+
+                <div class="empty-state">
+
+                    <p class="empty-label">
+                        READY
+                    </p>
+
+                    <h3>
+                        Enter a city to prepare your weather brief.
+                    </h3>
+
+                    <p>
+                        Your forecast and outfit recommendation will appear here.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="source-section">
+
+            <p>
+                Weather data provided by Open-Meteo.
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            Weather Outfit Planner
+        </p>
+
+        <p>
+            Mini Project 3
+        </p>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
