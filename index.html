@@ -7,7 +7,7 @@
 
     <meta
         name="description"
-        content="A weather outfit planner that turns forecast data into practical clothing and preparation recommendations."
+        content="A weather outfit planner that turns location, time, occasion, and forecast data into practical clothing and preparation recommendations."
     >
 
     <title>Weather Outfit Planner</title>
@@ -36,6 +36,8 @@
 
     <main>
 
+        <!-- HERO -->
+
         <section class="hero">
 
             <div>
@@ -52,12 +54,15 @@
             </div>
 
             <p class="hero-copy">
-                Search a city and turn the forecast into a simple recommendation
-                for what to wear and what to bring before you leave.
+                Choose where you are going, when you will be there,
+                and what you are doing. The forecast becomes a
+                practical outfit and preparation brief.
             </p>
 
         </section>
 
+
+        <!-- SEARCH -->
 
         <section class="search-section"
                  aria-labelledby="search-heading">
@@ -77,11 +82,13 @@
 
             <form id="weather-form" novalidate>
 
-                <label for="city">
-                    CITY
-                </label>
+                <!-- CITY -->
 
-                <div class="search-row">
+                <div class="field city-field">
+
+                    <label for="city">
+                        CITY
+                    </label>
 
                     <input
                         id="city"
@@ -92,11 +99,87 @@
                         required
                     >
 
-                    <button type="submit">
-                        Prepare Brief
-                    </button>
+                </div>
+
+
+                <!-- EVENT DETAILS -->
+
+                <div class="event-grid">
+
+                    <div class="field">
+
+                        <label for="event-date">
+                            DATE
+                        </label>
+
+                        <input
+                            id="event-date"
+                            name="eventDate"
+                            type="date"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="event-time">
+                            TIME
+                        </label>
+
+                        <input
+                            id="event-time"
+                            name="eventTime"
+                            type="time"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="occasion">
+                            OCCASION
+                        </label>
+
+                        <select
+                            id="occasion"
+                            name="occasion"
+                            required
+                        >
+                            <option value="Interview">
+                                Interview
+                            </option>
+
+                            <option value="Class">
+                                Class
+                            </option>
+
+                            <option value="Casual">
+                                Casual
+                            </option>
+
+                            <option value="Outdoor">
+                                Outdoor
+                            </option>
+                        </select>
+
+                    </div>
 
                 </div>
+
+
+                <!-- ACTION -->
+
+                <button
+                    class="prepare-button"
+                    type="submit"
+                >
+                    Prepare Brief
+                </button>
+
 
                 <p id="form-message"
                    class="form-message"
@@ -108,6 +191,8 @@
         </section>
 
 
+        <!-- RESULT -->
+
         <section class="result-section"
                  aria-labelledby="result-heading">
 
@@ -118,7 +203,7 @@
                 </span>
 
                 <h2 id="result-heading">
-                    TODAY'S BRIEF
+                    YOUR WEATHER BRIEF
                 </h2>
 
             </div>
@@ -134,11 +219,12 @@
                     </p>
 
                     <h3>
-                        Enter a city to prepare your weather brief.
+                        Tell me where you're going and what you're doing.
                     </h3>
 
                     <p>
-                        Your forecast and outfit recommendation will appear here.
+                        Choose a city, date, time, and occasion to get
+                        a weather-based outfit recommendation.
                     </p>
 
                 </div>
@@ -147,6 +233,8 @@
 
         </section>
 
+
+        <!-- SOURCE -->
 
         <section class="source-section">
 
