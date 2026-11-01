@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Weather Outfit Planner — Option A</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f1e8;
+            color: #111111;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 24px 70px;
+        }
+
+        .top-label {
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 50px;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.4fr 0.6fr;
+            gap: 40px;
+            align-items: end;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 40px;
+        }
+
+        h1 {
+            font-size: clamp(56px, 9vw, 110px);
+            line-height: 0.9;
+            letter-spacing: -5px;
+            margin: 0;
+        }
+
+        .hero-copy {
+            font-size: 18px;
+            line-height: 1.5;
+            color: #555555;
+            margin: 0;
+        }
+
+        .search-section {
+            padding: 40px 0;
+            border-bottom: 1px solid #bbbbbb;
+        }
+
+        label {
+            display: block;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        input {
+            flex: 1;
+            padding: 14px;
+            font: inherit;
+            border: 1px solid #111111;
+            background-color: transparent;
+        }
+
+        button {
+            padding: 14px 22px;
+            border: none;
+            background-color: #111111;
+            color: white;
+            font: inherit;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .result {
+            padding-top: 50px;
+        }
+
+        .location {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
+        }
+
+        .recommendation {
+            font-size: clamp(34px, 5vw, 62px);
+            line-height: 1.05;
+            max-width: 850px;
+            margin: 0 0 50px;
+        }
+
+        .weather-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-top: 1px solid #111111;
+            border-bottom: 1px solid #111111;
+        }
+
+        .weather-item {
+            padding: 24px;
+            border-right: 1px solid #cccccc;
+        }
+
+        .weather-item:last-child {
+            border-right: none;
+        }
+
+        .weather-value {
+            font-size: 40px;
+            font-weight: bold;
+            margin: 0 0 8px;
+        }
+
+        .weather-label {
+            font-size: 11px;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        .bring {
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px solid #cccccc;
+        }
+
+        .bring h2 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .bring p {
+            font-size: 20px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 700px) {
+
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .search-row {
+                flex-direction: column;
+            }
+
+            .weather-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .weather-item {
+                border-bottom: 1px solid #cccccc;
+            }
+
+            h1 {
+                letter-spacing: -3px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main>
+
+        <p class="top-label">
+            Weather Outfit Planner / Option A
+        </p>
+
+        <section class="hero">
+
+            <h1>
+                Dress for<br>
+                the day.
+            </h1>
+
+            <p class="hero-copy">
+                Search a city and turn the forecast into a simple recommendation
+                for what to wear and what to bring.
+            </p>
+
+        </section>
+
+
+        <section class="search-section">
+
+            <label for="city">
+                CITY
+            </label>
+
+            <div class="search-row">
+
+                <input
+                    id="city"
+                    type="text"
+                    placeholder="Boston"
+                >
+
+                <button type="button">
+                    Check Weather
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <section class="result">
+
+            <p class="location">
+                Boston, United States
+            </p>
+
+            <p class="recommendation">
+                Wear a light jacket and bring an umbrella.
+            </p>
+
+
+            <div class="weather-grid">
+
+                <div class="weather-item">
+                    <p class="weather-value">58°F</p>
+                    <p class="weather-label">High</p>
+                </div>
+
+                <div class="weather-item">
+                    <p class="weather-value">44°F</p>
+                    <p class="weather-label">Low</p>
+                </div>
+
+                <div class="weather-item">
+                    <p class="weather-value">70%</p>
+                    <p class="weather-label">Rain</p>
+                </div>
+
+                <div class="weather-item">
+                    <p class="weather-value">18 mph</p>
+                    <p class="weather-label">Wind</p>
+                </div>
+
+            </div>
+
+
+            <div class="bring">
+
+                <h2>
+                    What to bring
+                </h2>
+
+                <p>
+                    Umbrella, light jacket, and shoes that can handle wet weather.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>
