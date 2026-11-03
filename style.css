@@ -1,21 +1,28 @@
-/* ---------------------------------
-   VARIABLES
---------------------------------- */
-
 :root {
-    --paper: #f6f3ea;
-    --surface: #fffdf7;
+    --cream: #fffaf2;
+    --paper: #fffdf8;
 
-    --ink: #16202a;
-    --muted: #66717c;
+    --ink: #233044;
+    --muted: #697386;
 
-    --navy: #18324a;
-    --blue: #2f6f8f;
-    --blue-soft: #dbe9ef;
+    --pink: #f4a7b9;
+    --pink-soft: #ffe3eb;
 
-    --warm: #b86f3c;
+    --blue: #86b9d8;
+    --blue-soft: #dff2ff;
 
-    --line: #ccd2d3;
+    --yellow: #f6d77a;
+    --yellow-soft: #fff2bd;
+
+    --green: #a8d5ba;
+
+    --purple: #9d8cd8;
+
+    --line: #d8d2c8;
+
+    --shadow:
+        5px 6px 0
+        rgba(35, 48, 68, 0.12);
 }
 
 
@@ -36,7 +43,18 @@ html {
 body {
     margin: 0;
 
-    background-color: var(--paper);
+    background:
+        radial-gradient(
+            circle at 8% 12%,
+            rgba(244, 167, 185, 0.15),
+            transparent 24%
+        ),
+        radial-gradient(
+            circle at 90% 18%,
+            rgba(134, 185, 216, 0.18),
+            transparent 24%
+        ),
+        var(--cream);
 
     color: var(--ink);
 
@@ -54,11 +72,6 @@ select {
 }
 
 
-button {
-    cursor: pointer;
-}
-
-
 a {
     color: inherit;
 }
@@ -71,6 +84,9 @@ a {
 .site-header {
     border-bottom:
         1px solid var(--line);
+
+    background:
+        rgba(255, 253, 248, 0.88);
 }
 
 
@@ -82,34 +98,48 @@ a {
 
     margin: 0 auto;
 
-    display: flex;
+    min-height: 72px;
 
-    justify-content:
-        space-between;
+    display: flex;
 
     align-items: center;
 
-    gap: 24px;
+    justify-content: space-between;
 
-    min-height: 72px;
+    gap: 20px;
 }
 
 
 .brand {
-    color: var(--navy);
+    padding:
+        8px 12px;
+
+    border:
+        1px solid var(--ink);
+
+    border-radius: 999px;
+
+    background:
+        var(--pink-soft);
+
+    color: var(--ink);
 
     font-family:
         Arial,
         Helvetica,
         sans-serif;
 
-    font-size: 12px;
+    font-size: 11px;
 
-    font-weight: 700;
+    font-weight: 800;
 
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
 
     text-decoration: none;
+
+    box-shadow:
+        3px 3px 0
+        var(--ink);
 }
 
 
@@ -150,66 +180,127 @@ main {
 --------------------------------- */
 
 .hero {
-    max-width: 850px;
+    position: relative;
+
+    max-width: 900px;
 
     padding:
-        95px 0
-        90px;
+        90px 0
+        95px;
+}
+
+
+.hero::after {
+    content: "✦";
+
+    position: absolute;
+
+    top: 70px;
+    right: 10px;
+
+    color: var(--pink);
+
+    font-size: 52px;
+
+    transform:
+        rotate(12deg);
 }
 
 
 .hero-kicker {
+    display: inline-block;
+
     margin:
         0 0
-        22px;
+        24px;
 
-    color: var(--warm);
+    padding:
+        8px 12px;
+
+    border:
+        1px solid var(--ink);
+
+    border-radius: 999px;
+
+    background:
+        var(--yellow-soft);
+
+    color: var(--ink);
 
     font-family:
         Arial,
         Helvetica,
         sans-serif;
 
-    font-size: 11px;
+    font-size: 10px;
 
-    font-weight: 700;
+    font-weight: 800;
 
-    letter-spacing: 0.2em;
+    letter-spacing: 0.16em;
+
+    box-shadow:
+        3px 3px 0
+        var(--ink);
 }
 
 
 .hero h1 {
     margin: 0;
 
-    color: var(--navy);
+    max-width: 850px;
+
+    color: var(--ink);
 
     font-size:
         clamp(
-            54px,
+            58px,
             8vw,
-            104px
+            108px
         );
 
     font-weight: 400;
 
-    line-height: 0.92;
+    line-height: 0.9;
 
-    letter-spacing: -0.05em;
+    letter-spacing: -0.055em;
+}
+
+
+.hero h1::selection {
+    background:
+        var(--pink-soft);
 }
 
 
 .hero-copy {
-    max-width: 620px;
+    max-width: 600px;
 
     margin:
-        38px 0
+        40px 0
         0;
 
-    color: var(--muted);
+    padding:
+        22px 24px;
 
-    font-size: 20px;
+    border:
+        1px solid var(--ink);
+
+    border-radius: 18px;
+
+    background:
+        var(--blue-soft);
+
+    color: var(--ink);
+
+    font-size: 18px;
 
     line-height: 1.65;
+
+    box-shadow:
+        var(--shadow);
+
+    transform:
+        rotate(-0.5deg);
 }
 
 
@@ -223,21 +314,32 @@ main {
         70px 0;
 
     border-top:
-        1px solid var(--line);
+        2px dashed
+        var(--line);
 }
 
 
 .section-heading {
-    margin-bottom: 38px;
+    margin-bottom: 36px;
 }
 
 
 .section-number {
+    display: inline-block;
+
     margin:
         0 0
-        10px;
+        12px;
 
-    color: var(--blue);
+    padding:
+        6px 10px;
+
+    border-radius: 999px;
+
+    background:
+        var(--pink-soft);
+
+    color: var(--ink);
 
     font-family:
         Arial,
@@ -246,27 +348,27 @@ main {
 
     font-size: 10px;
 
-    font-weight: 700;
+    font-weight: 800;
 
-    letter-spacing: 0.18em;
+    letter-spacing: 0.14em;
 }
 
 
 .section-heading h2 {
     margin: 0;
 
-    color: var(--navy);
+    color: var(--ink);
 
     font-size:
         clamp(
-            32px,
+            34px,
             5vw,
-            50px
+            52px
         );
 
     font-weight: 400;
 
-    letter-spacing: -0.025em;
+    letter-spacing: -0.03em;
 }
 
 
@@ -275,7 +377,21 @@ main {
 --------------------------------- */
 
 #weather-form {
-    max-width: 920px;
+    max-width: 940px;
+
+    padding:
+        28px;
+
+    border:
+        1px solid var(--ink);
+
+    border-radius: 24px;
+
+    background:
+        var(--paper);
+
+    box-shadow:
+        var(--shadow);
 }
 
 
@@ -287,7 +403,7 @@ main {
 
 
 .field label {
-    margin-bottom: 9px;
+    margin-bottom: 8px;
 
     color: var(--muted);
 
@@ -298,9 +414,9 @@ main {
 
     font-size: 10px;
 
-    font-weight: 700;
+    font-weight: 800;
 
-    letter-spacing: 0.14em;
+    letter-spacing: 0.13em;
 }
 
 
@@ -311,15 +427,15 @@ main {
     min-height: 54px;
 
     padding:
-        0 14px;
+        0 15px;
 
     border:
-        1px solid var(--line);
+        1px solid var(--ink);
 
-    border-radius: 0;
+    border-radius: 14px;
 
-    background-color:
-        transparent;
+    background:
+        #ffffff;
 
     color: var(--ink);
 
@@ -331,27 +447,32 @@ main {
     font-size: 15px;
 
     outline: none;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
 }
 
 
 .field input:focus,
 .field select:focus {
-    border-color:
-        var(--blue);
+    transform:
+        translateY(-2px);
 
-    background-color:
-        var(--surface);
+    box-shadow:
+        3px 4px 0
+        var(--blue);
 }
 
 
 .city-field {
-    margin-bottom: 26px;
+    margin-bottom: 25px;
 }
 
 
 .field-help {
     margin:
-        8px 0
+        8px 2px
         0;
 
     color: var(--muted);
@@ -383,20 +504,22 @@ main {
 .prepare-button {
     min-height: 54px;
 
-    margin-top: 24px;
+    margin-top: 26px;
 
     padding:
         0 30px;
 
     border:
-        1px solid var(--navy);
+        1px solid var(--ink);
 
-    border-radius: 0;
+    border-radius:
+        999px;
 
     background:
-        var(--navy);
+        var(--pink);
 
-    color: white;
+    color:
+        var(--ink);
 
     font-family:
         Arial,
@@ -405,28 +528,43 @@ main {
 
     font-size: 11px;
 
-    font-weight: 700;
+    font-weight: 900;
 
-    letter-spacing: 0.13em;
+    letter-spacing:
+        0.12em;
+
+    box-shadow:
+        4px 4px 0
+        var(--ink);
 
     transition:
-        background-color
-        0.2s ease;
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
 }
 
 
 .prepare-button:hover {
-    background-color:
-        var(--blue);
+    transform:
+        translate(
+            2px,
+            2px
+        );
+
+    box-shadow:
+        2px 2px 0
+        var(--ink);
 }
 
 
-.prepare-button:focus-visible {
-    outline:
-        3px solid
-        var(--blue-soft);
+.prepare-button:active {
+    transform:
+        translate(
+            4px,
+            4px
+        );
 
-    outline-offset: 3px;
+    box-shadow:
+        none;
 }
 
 
@@ -447,33 +585,51 @@ main {
 
 
 .form-message.error {
-    color: #8d382b;
+    color: #9f3c50;
 }
 
 
 /* ---------------------------------
-   EMPTY / STATUS STATES
+   EMPTY / STATUS
 --------------------------------- */
 
 .empty-state,
 .status-state {
     padding:
-        50px;
+        46px;
 
     border:
-        1px solid var(--line);
+        1px solid var(--ink);
 
-    background-color:
-        var(--surface);
+    border-radius:
+        24px;
+
+    background:
+        var(--paper);
+
+    box-shadow:
+        var(--shadow);
 }
 
 
 .empty-number {
+    display: inline-block;
+
     margin:
         0 0
-        30px;
+        24px;
 
-    color: var(--blue);
+    padding:
+        7px 10px;
+
+    border-radius:
+        999px;
+
+    background:
+        var(--blue-soft);
+
+    color:
+        var(--ink);
 
     font-family:
         Arial,
@@ -482,7 +638,7 @@ main {
 
     font-size: 10px;
 
-    font-weight: 700;
+    font-weight: 800;
 
     letter-spacing: 0.15em;
 }
@@ -494,7 +650,8 @@ main {
         0 0
         12px;
 
-    color: var(--navy);
+    color:
+        var(--ink);
 
     font-size: 30px;
 
@@ -508,7 +665,8 @@ main {
 
     margin-bottom: 0;
 
-    color: var(--muted);
+    color:
+        var(--muted);
 
     font-family:
         Arial,
@@ -523,13 +681,15 @@ main {
 
 .status-state.loading {
     border-left:
-        4px solid var(--blue);
+        8px solid
+        var(--blue);
 }
 
 
 .status-state.error {
     border-left:
-        4px solid var(--warm);
+        8px solid
+        var(--pink);
 }
 
 
@@ -542,16 +702,16 @@ main {
 
     grid-template-columns:
         minmax(0, 1.55fr)
-        minmax(270px, 0.75fr);
+        minmax(290px, 0.75fr);
 
-    gap: 22px;
+    gap: 24px;
 
     align-items: start;
 }
 
 
 /* ---------------------------------
-   RECOMMENDATION PANEL
+   RECOMMENDATION
 --------------------------------- */
 
 .recommendation-panel {
@@ -559,10 +719,16 @@ main {
         38px;
 
     border:
-        1px solid var(--line);
+        1px solid var(--ink);
 
-    background-color:
-        var(--surface);
+    border-radius:
+        26px;
+
+    background:
+        var(--paper);
+
+    box-shadow:
+        var(--shadow);
 }
 
 
@@ -573,7 +739,8 @@ main {
         0 0
         16px;
 
-    color: var(--blue);
+    color:
+        var(--purple);
 
     font-family:
         Arial,
@@ -582,9 +749,9 @@ main {
 
     font-size: 10px;
 
-    font-weight: 700;
+    font-weight: 900;
 
-    letter-spacing: 0.17em;
+    letter-spacing: 0.16em;
 }
 
 
@@ -593,15 +760,22 @@ main {
 
     margin:
         0 0
-        15px;
+        16px;
 
     padding:
-        7px 10px;
+        7px 12px;
 
-    background-color:
-        var(--blue-soft);
+    border:
+        1px solid var(--ink);
 
-    color: var(--navy);
+    border-radius:
+        999px;
+
+    background:
+        var(--yellow-soft);
+
+    color:
+        var(--ink);
 
     font-family:
         Arial,
@@ -610,11 +784,16 @@ main {
 
     font-size: 10px;
 
-    font-weight: 700;
+    font-weight: 800;
 
-    letter-spacing: 0.12em;
+    letter-spacing: 0.11em;
 
-    text-transform: uppercase;
+    text-transform:
+        uppercase;
+
+    box-shadow:
+        2px 2px 0
+        var(--ink);
 }
 
 
@@ -623,20 +802,22 @@ main {
         0 0
         8px;
 
-    color: var(--navy);
+    color:
+        var(--ink);
 
     font-size:
         clamp(
-            35px,
+            36px,
             6vw,
-            56px
+            58px
         );
 
     font-weight: 400;
 
     line-height: 1;
 
-    letter-spacing: -0.035em;
+    letter-spacing:
+        -0.04em;
 }
 
 
@@ -645,7 +826,45 @@ main {
         0 0
         22px;
 
-    color: var(--muted);
+    color:
+        var(--muted);
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing:
+        0.06em;
+
+    text-transform:
+        uppercase;
+}
+
+
+.result-condition {
+    display:
+        inline-block;
+
+    margin:
+        0 0
+        15px;
+
+    padding:
+        6px 10px;
+
+    border-radius:
+        999px;
+
+    background:
+        var(--pink-soft);
+
+    color:
+        var(--ink);
 
     font-family:
         Arial,
@@ -654,33 +873,13 @@ main {
 
     font-size: 11px;
 
-    font-weight: 700;
+    font-weight: 800;
 
-    letter-spacing: 0.06em;
+    letter-spacing:
+        0.08em;
 
-    text-transform: uppercase;
-}
-
-
-.result-condition {
-    margin:
-        0 0
-        9px;
-
-    color: var(--warm);
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
-    font-size: 12px;
-
-    font-weight: 700;
-
-    letter-spacing: 0.1em;
-
-    text-transform: uppercase;
+    text-transform:
+        uppercase;
 }
 
 
@@ -689,13 +888,16 @@ main {
 
     margin:
         0 0
-        32px;
+        34px;
 
-    color: var(--ink);
+    color:
+        var(--ink);
 
-    font-size: 24px;
+    font-size:
+        24px;
 
-    line-height: 1.4;
+    line-height:
+        1.4;
 }
 
 
@@ -709,8 +911,9 @@ main {
 
 
 .outfit-grid {
-    border-top:
-        1px solid var(--line);
+    display: grid;
+
+    gap: 10px;
 }
 
 
@@ -721,18 +924,37 @@ main {
         130px
         minmax(0, 1fr);
 
-    gap: 24px;
+    gap: 20px;
 
     padding:
-        15px 0;
+        14px 16px;
 
-    border-bottom:
+    border:
         1px solid var(--line);
+
+    border-radius:
+        14px;
+
+    background:
+        #ffffff;
+}
+
+
+.outfit-row:nth-child(odd) {
+    background:
+        var(--blue-soft);
+}
+
+
+.outfit-row:nth-child(even) {
+    background:
+        var(--pink-soft);
 }
 
 
 .outfit-label {
-    color: var(--muted);
+    color:
+        var(--muted);
 
     font-family:
         Arial,
@@ -741,16 +963,19 @@ main {
 
     font-size: 10px;
 
-    font-weight: 700;
+    font-weight: 900;
 
-    letter-spacing: 0.1em;
+    letter-spacing:
+        0.1em;
 
-    text-transform: uppercase;
+    text-transform:
+        uppercase;
 }
 
 
 .outfit-value {
-    color: var(--ink);
+    color:
+        var(--ink);
 
     font-family:
         Arial,
@@ -761,7 +986,8 @@ main {
 
     font-weight: 700;
 
-    line-height: 1.5;
+    line-height:
+        1.5;
 }
 
 
@@ -770,16 +996,29 @@ main {
         28px 0
         0;
 
-    padding-left: 17px;
+    padding:
+        18px 20px;
 
-    border-left:
-        3px solid var(--warm);
+    border:
+        1px solid
+        var(--ink);
 
-    color: var(--muted);
+    border-radius:
+        16px;
+
+    background:
+        var(--yellow-soft);
+
+    color:
+        var(--ink);
 
     font-size: 16px;
 
-    line-height: 1.7;
+    line-height:
+        1.7;
+
+    transform:
+        rotate(0.3deg);
 }
 
 
@@ -791,16 +1030,31 @@ main {
     padding:
         32px;
 
-    background-color:
-        var(--navy);
+    border:
+        1px solid
+        var(--ink);
 
-    color: white;
+    border-radius:
+        26px;
+
+    background:
+        var(--blue-soft);
+
+    color:
+        var(--ink);
+
+    box-shadow:
+        var(--shadow);
+
+    transform:
+        rotate(0.6deg);
 }
 
 
 .forecast-panel
 .forecast-title {
-    color: var(--blue-soft);
+    color:
+        var(--ink);
 }
 
 
@@ -818,18 +1072,19 @@ main {
         17px 0;
 
     border-bottom:
-        1px solid
+        1px dashed
         rgba(
-            255,
-            255,
-            255,
-            0.16
+            35,
+            48,
+            68,
+            0.22
         );
 }
 
 
 .metric-label {
-    color: #cbd6df;
+    color:
+        var(--muted);
 
     font-family:
         Arial,
@@ -838,23 +1093,26 @@ main {
 
     font-size: 10px;
 
-    font-weight: 700;
+    font-weight: 900;
 
-    letter-spacing: 0.09em;
+    letter-spacing:
+        0.09em;
 
-    text-transform: uppercase;
+    text-transform:
+        uppercase;
 }
 
 
 .metric-value {
-    color: white;
+    color:
+        var(--ink);
 
     font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+        Georgia,
+        "Times New Roman",
+        serif;
 
-    font-size: 15px;
+    font-size: 20px;
 
     font-weight: 700;
 
@@ -867,16 +1125,23 @@ main {
 --------------------------------- */
 
 .before-you-leave {
-    margin-top: 22px;
+    margin-top: 24px;
 
     padding:
         26px 30px;
 
     border:
-        1px solid var(--line);
+        1px solid
+        var(--ink);
 
-    background-color:
-        var(--blue-soft);
+    border-radius:
+        20px;
+
+    background:
+        var(--green);
+
+    box-shadow:
+        var(--shadow);
 }
 
 
@@ -885,7 +1150,8 @@ main {
         0 0
         9px;
 
-    color: var(--navy);
+    color:
+        var(--ink);
 
     font-family:
         Arial,
@@ -894,20 +1160,23 @@ main {
 
     font-size: 10px;
 
-    font-weight: 700;
+    font-weight: 900;
 
-    letter-spacing: 0.15em;
+    letter-spacing:
+        0.15em;
 }
 
 
 .before-you-leave p {
     margin: 0;
 
-    color: var(--ink);
+    color:
+        var(--ink);
 
     font-size: 17px;
 
-    line-height: 1.6;
+    line-height:
+        1.6;
 }
 
 
@@ -917,18 +1186,23 @@ main {
 
 .source-section {
     padding:
-        28px 0
+        30px 0
         70px;
 
+    margin-top:
+        35px;
+
     border-top:
-        1px solid var(--line);
+        2px dashed
+        var(--line);
 }
 
 
 .source-section p {
     margin: 0;
 
-    color: var(--muted);
+    color:
+        var(--muted);
 
     font-family:
         Arial,
@@ -940,7 +1214,10 @@ main {
 
 
 .source-section a {
-    color: var(--blue);
+    color:
+        var(--purple);
+
+    font-weight: 700;
 }
 
 
@@ -961,7 +1238,8 @@ main {
         45px;
 
     border-top:
-        1px solid var(--line);
+        1px solid
+        var(--line);
 
     display: flex;
 
@@ -970,7 +1248,8 @@ main {
 
     gap: 24px;
 
-    color: var(--muted);
+    color:
+        var(--muted);
 
     font-family:
         Arial,
@@ -979,9 +1258,10 @@ main {
 
     font-size: 10px;
 
-    font-weight: 700;
+    font-weight: 800;
 
-    letter-spacing: 0.08em;
+    letter-spacing:
+        0.08em;
 }
 
 
@@ -989,13 +1269,9 @@ main {
    TABLET
 --------------------------------- */
 
-@media (max-width: 850px) {
-
-    .hero {
-        padding:
-            75px 0;
-    }
-
+@media (
+    max-width: 850px
+) {
 
     .event-grid {
         grid-template-columns:
@@ -1020,7 +1296,7 @@ main {
 
 
     .forecast-panel {
-        width: 100%;
+        transform: none;
     }
 }
 
@@ -1029,7 +1305,9 @@ main {
    MOBILE
 --------------------------------- */
 
-@media (max-width: 600px) {
+@media (
+    max-width: 600px
+) {
 
     .header-inner,
     main,
@@ -1042,39 +1320,55 @@ main {
 
 
     .header-inner {
-        min-height: 62px;
-
-        align-items:
-            flex-start;
+        min-height:
+            70px;
 
         flex-direction:
             column;
 
+        align-items:
+            flex-start;
+
         justify-content:
             center;
 
-        gap: 5px;
+        gap: 6px;
     }
 
 
     .hero {
         padding:
-            58px 0;
+            55px 0;
+    }
+
+
+    .hero::after {
+        display: none;
     }
 
 
     .hero h1 {
         font-size:
             clamp(
-                46px,
+                48px,
                 15vw,
-                66px
+                68px
             );
     }
 
 
     .hero-copy {
-        font-size: 17px;
+        font-size:
+            16px;
+
+        transform:
+            none;
+    }
+
+
+    #weather-form {
+        padding:
+            20px;
     }
 
 
@@ -1093,12 +1387,14 @@ main {
 
     .event-grid
     .field:last-child {
-        grid-column: auto;
+        grid-column:
+            auto;
     }
 
 
     .prepare-button {
-        width: 100%;
+        width:
+            100%;
     }
 
 
@@ -1106,7 +1402,8 @@ main {
     .status-state,
     .recommendation-panel,
     .forecast-panel {
-        padding: 25px;
+        padding:
+            24px;
     }
 
 
@@ -1114,7 +1411,8 @@ main {
         grid-template-columns:
             1fr;
 
-        gap: 5px;
+        gap:
+            5px;
     }
 
 
@@ -1122,12 +1420,14 @@ main {
         grid-template-columns:
             1fr;
 
-        gap: 5px;
+        gap:
+            5px;
     }
 
 
     .metric-value {
-        text-align: left;
+        text-align:
+            left;
     }
 
 
@@ -1135,6 +1435,7 @@ main {
         flex-direction:
             column;
 
-        gap: 8px;
+        gap:
+            8px;
     }
 }
