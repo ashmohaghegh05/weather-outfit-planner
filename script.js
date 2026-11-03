@@ -1,147 +1,225 @@
-const form = document.querySelector("#weather-form");
-const cityInput = document.querySelector("#city");
-const eventDateInput = document.querySelector("#event-date");
-const eventTimeInput = document.querySelector("#event-time");
-const occasionInput = document.querySelector("#occasion");
-const formMessage = document.querySelector("#form-message");
-const resultArea = document.querySelector("#result-area");
+const form =
+    document.querySelector("#weather-form");
+
+const cityInput =
+    document.querySelector("#city");
+
+const eventDateInput =
+    document.querySelector("#event-date");
+
+const eventTimeInput =
+    document.querySelector("#event-time");
+
+const occasionInput =
+    document.querySelector("#occasion");
+
+const formMessage =
+    document.querySelector("#form-message");
+
+const resultArea =
+    document.querySelector("#result-area");
 
 
 setDateLimits();
 
 
-form.addEventListener("submit", async function(event) {
-    event.preventDefault();
+form.addEventListener(
+    "submit",
+    async function(event) {
 
-    const city = cityInput.value.trim();
-    const eventDate = eventDateInput.value;
-    const eventTime = eventTimeInput.value;
-    const occasion = occasionInput.value;
-
-    clearFormMessage();
+        event.preventDefault();
 
 
-    if (
-        city === "" ||
-        eventDate === "" ||
-        eventTime === "" ||
-        occasion === ""
-    ) {
-        showFormError(
-            "Enter a city, date, time, and occasion before preparing your brief."
-        );
+        const city =
+            cityInput.value.trim();
 
-        return;
-    }
+        const eventDate =
+            eventDateInput.value;
 
+        const eventTime =
+            eventTimeInput.value;
 
-    if (
-        eventDate < eventDateInput.min ||
-        eventDate > eventDateInput.max
-    ) {
-        showFormError(
-            "Choose a date within the available forecast range."
-        );
-
-        return;
-    }
+        const occasion =
+            occasionInput.value;
 
 
-    showLoading();
+        clearFormMessage();
 
 
-    try {
+        if (
+            city === "" ||
+            eventDate === "" ||
+            eventTime === "" ||
+            occasion === ""
+        ) {
 
-        const location = await searchLocation(city);
+            showFormError(
+                "Enter a city or area, date, time, and occasion."
+            );
 
-
-        if (!location) {
-            showNoResults();
             return;
         }
 
 
-        const forecastData = await fetchForecast(
-            location.latitude,
-            location.longitude,
-            eventDate
-        );
+        if (
+            eventDate <
+            eventDateInput.min ||
+            eventDate >
+            eventDateInput.max
+        ) {
+
+            showFormError(
+                "Choose a date within the available forecast range."
+            );
+
+            return;
+        }
 
 
-        const weather = getWeatherForTime(
-            forecastData,
-            eventTime
-        );
+        showLoading();
 
 
-        renderWeather(
-            location,
-            weather,
-            eventDate,
-            eventTime,
-            occasion
-        );
+        try {
 
-    } catch (error) {
+            const location =
+                await searchLocation(
+                    city
+                );
 
-        console.log(error);
 
-        showError();
+            if (!location) {
+
+                showNoResults();
+
+                return;
+            }
+
+
+            const forecastData =
+                await fetchForecast(
+                    location.latitude,
+                    location.longitude,
+                    eventDate
+                );
+
+
+            const weather =
+                getWeatherForTime(
+                    forecastData,
+                    eventTime
+                );
+
+
+            renderWeather(
+                location,
+                weather,
+                eventDate,
+                eventTime,
+                occasion
+            );
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            showError();
+        }
     }
-});
+);
 
 
 /* ---------------------------------
-   DATE LIMITS
+   DATE RANGE
 --------------------------------- */
 
 function setDateLimits() {
-    const today = new Date();
 
-    const lastForecastDate = new Date();
-    lastForecastDate.setDate(
-        lastForecastDate.getDate() + 15
+    const today =
+        new Date();
+
+
+    const finalDate =
+        new Date();
+
+
+    finalDate.setDate(
+        finalDate.getDate() + 15
     );
 
-    eventDateInput.min = formatDateForInput(today);
+
+    eventDateInput.min =
+        formatDateForInput(
+            today
+        );
+
 
     eventDateInput.max =
-        formatDateForInput(lastForecastDate);
+        formatDateForInput(
+            finalDate
+        );
 }
 
 
 function formatDateForInput(date) {
-    const year = date.getFullYear();
 
-    const month = String(
-        date.getMonth() + 1
-    ).padStart(2, "0");
+    const year =
+        date.getFullYear();
 
-    const day = String(
-        date.getDate()
-    ).padStart(2, "0");
 
-    return year + "-" + month + "-" + day;
+    const month =
+        String(
+            date.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    const day =
+        String(
+            date.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    return (
+        year +
+        "-" +
+        month +
+        "-" +
+        day
+    );
 }
 
 
 /* ---------------------------------
-   GEOCODING
+   LOCATION API
 --------------------------------- */
 
-async function searchLocation(city) {
+async function searchLocation(
+    locationQuery
+) {
+
     const url =
         "https://geocoding-api.open-meteo.com/v1/search" +
-        "?name=" + encodeURIComponent(city) +
+        "?name=" +
+        encodeURIComponent(
+            locationQuery
+        ) +
         "&count=1" +
         "&language=en" +
         "&format=json";
 
 
-    const response = await fetch(url);
+    const response =
+        await fetch(url);
 
 
     if (!response.ok) {
+
         throw new Error(
             "Location request failed: " +
             response.status
@@ -149,13 +227,15 @@ async function searchLocation(city) {
     }
 
 
-    const data = await response.json();
+    const data =
+        await response.json();
 
 
     if (
         !data.results ||
         data.results.length === 0
     ) {
+
         return null;
     }
 
@@ -177,7 +257,9 @@ async function fetchForecast(
     const hourlyFields = [
         "temperature_2m",
         "apparent_temperature",
+        "relative_humidity_2m",
         "precipitation_probability",
+        "snowfall",
         "weather_code",
         "wind_speed_10m"
     ].join(",");
@@ -185,20 +267,27 @@ async function fetchForecast(
 
     const url =
         "https://api.open-meteo.com/v1/forecast" +
-        "?latitude=" + latitude +
-        "&longitude=" + longitude +
-        "&hourly=" + hourlyFields +
+        "?latitude=" +
+        latitude +
+        "&longitude=" +
+        longitude +
+        "&hourly=" +
+        hourlyFields +
         "&temperature_unit=fahrenheit" +
         "&wind_speed_unit=mph" +
         "&timezone=auto" +
-        "&start_date=" + eventDate +
-        "&end_date=" + eventDate;
+        "&start_date=" +
+        eventDate +
+        "&end_date=" +
+        eventDate;
 
 
-    const response = await fetch(url);
+    const response =
+        await fetch(url);
 
 
     if (!response.ok) {
+
         throw new Error(
             "Forecast request failed: " +
             response.status
@@ -206,7 +295,8 @@ async function fetchForecast(
     }
 
 
-    const data = await response.json();
+    const data =
+        await response.json();
 
 
     if (
@@ -214,6 +304,7 @@ async function fetchForecast(
         !data.hourly.time ||
         data.hourly.time.length === 0
     ) {
+
         throw new Error(
             "Hourly forecast data is missing."
         );
@@ -225,7 +316,7 @@ async function fetchForecast(
 
 
 /* ---------------------------------
-   FIND CLOSEST HOUR
+   FIND CLOSEST FORECAST HOUR
 --------------------------------- */
 
 function getWeatherForTime(
@@ -234,64 +325,106 @@ function getWeatherForTime(
 ) {
 
     const requestedMinutes =
-        timeToMinutes(eventTime);
+        timeToMinutes(
+            eventTime
+        );
+
 
     let closestIndex = 0;
-    let smallestDifference = Infinity;
+
+    let smallestDifference =
+        Infinity;
 
 
     forecastData.hourly.time.forEach(
-        function(time, index) {
+        function(
+            forecastTime,
+            index
+        ) {
 
-            const timePart = time.split("T")[1];
+            const hour =
+                forecastTime
+                    .split("T")[1];
+
 
             const forecastMinutes =
-                timeToMinutes(timePart);
-
-            const difference = Math.abs(
-                forecastMinutes -
-                requestedMinutes
-            );
+                timeToMinutes(
+                    hour
+                );
 
 
-            if (difference < smallestDifference) {
-                smallestDifference = difference;
-                closestIndex = index;
+            const difference =
+                Math.abs(
+                    forecastMinutes -
+                    requestedMinutes
+                );
+
+
+            if (
+                difference <
+                smallestDifference
+            ) {
+
+                smallestDifference =
+                    difference;
+
+
+                closestIndex =
+                    index;
             }
         }
     );
 
 
     return {
+
         forecastTime:
             forecastData.hourly.time[
                 closestIndex
             ],
+
 
         temperature:
             forecastData.hourly.temperature_2m[
                 closestIndex
             ],
 
+
         apparentTemperature:
             forecastData.hourly.apparent_temperature[
                 closestIndex
             ],
+
+
+        humidity:
+            forecastData.hourly.relative_humidity_2m[
+                closestIndex
+            ] ?? 0,
+
 
         rain:
             forecastData.hourly.precipitation_probability[
                 closestIndex
             ] ?? 0,
 
+
+        snowfall:
+            forecastData.hourly.snowfall[
+                closestIndex
+            ] ?? 0,
+
+
         weatherCode:
             forecastData.hourly.weather_code[
                 closestIndex
             ],
 
+
         wind:
             forecastData.hourly.wind_speed_10m[
                 closestIndex
             ] ?? 0,
+
 
         timezone:
             forecastData.timezone
@@ -300,222 +433,860 @@ function getWeatherForTime(
 
 
 function timeToMinutes(time) {
-    const parts = time.split(":");
 
-    const hours = Number(parts[0]);
-    const minutes = Number(parts[1]);
+    const parts =
+        time.split(":");
 
-    return hours * 60 + minutes;
+
+    const hours =
+        Number(
+            parts[0]
+        );
+
+
+    const minutes =
+        Number(
+            parts[1]
+        );
+
+
+    return (
+        hours * 60 +
+        minutes
+    );
 }
 
 
 /* ---------------------------------
-   RECOMMENDATION
+   LOCATION DISPLAY
+--------------------------------- */
+
+function getAreaName(location) {
+
+    const parts = [];
+
+
+    if (location.name) {
+
+        parts.push(
+            location.name
+        );
+    }
+
+
+    if (
+        location.admin1 &&
+        location.admin1 !==
+        location.name
+    ) {
+
+        parts.push(
+            location.admin1
+        );
+    }
+
+
+    if (
+        location.country &&
+        !parts.includes(
+            location.country
+        )
+    ) {
+
+        parts.push(
+            location.country
+        );
+    }
+
+
+    return parts.join(", ");
+}
+
+
+/* ---------------------------------
+   OUTFIT RECOMMENDATION
 --------------------------------- */
 
 function createRecommendation(
     weather,
-    occasion
+    occasion,
+    location
 ) {
-
-    const items = [];
-    const reasons = [];
 
     const feelsLike =
         weather.apparentTemperature;
 
-    let recommendation = "";
+
+    const areaName =
+        getAreaName(
+            location
+        );
 
 
-    /* OCCASION + TEMPERATURE */
+    const outfit = {
+
+        top: "",
+
+        bottom: "",
+
+        midLayer: "",
+
+        outerLayer: "",
+
+        shoes: "",
+
+        accessories: []
+    };
+
+
+    const reasons = [];
+
+    let headline = "";
+
+
+    /* ---------------------------------
+       INTERVIEW
+    --------------------------------- */
 
     if (occasion === "Interview") {
 
-        if (feelsLike <= 35) {
-            recommendation =
-                "Wear your interview outfit with a warm coat and layers.";
+        headline =
+            "Professional, polished, and matched to the local forecast.";
 
-            addItem(items, "Warm coat");
-            addItem(items, "Professional layers");
-
-        } else if (feelsLike <= 50) {
-            recommendation =
-                "Wear your interview outfit with a clean jacket or warm outer layer.";
-
-            addItem(items, "Jacket");
-
-        } else if (feelsLike <= 65) {
-            recommendation =
-                "Wear your interview outfit with a light layer for the trip.";
-
-            addItem(items, "Light layer");
-
-        } else {
-            recommendation =
-                "Wear a breathable interview outfit and keep extra layers light.";
-        }
-
-
-    } else if (occasion === "Class") {
 
         if (feelsLike <= 35) {
-            recommendation =
-                "Dress warmly for class with a coat and comfortable layers.";
 
-            addItem(items, "Warm coat");
-            addItem(items, "Layers");
+            outfit.top =
+                "Light-blue Oxford shirt";
+
+            outfit.bottom =
+                "Charcoal tailored trousers";
+
+            outfit.midLayer =
+                "Navy merino crewneck sweater";
+
+            outfit.outerLayer =
+                "Dark navy wool overcoat";
+
+            outfit.shoes =
+                "Black leather derby shoes";
+
 
         } else if (feelsLike <= 50) {
-            recommendation =
-                "Wear comfortable class clothes with a jacket.";
 
-            addItem(items, "Jacket");
+            outfit.top =
+                "White Oxford shirt";
+
+            outfit.bottom =
+                "Charcoal tailored trousers";
+
+            outfit.midLayer =
+                "Navy structured blazer";
+
+            outfit.outerLayer =
+                "Tan or navy trench coat";
+
+            outfit.shoes =
+                "Dark brown leather loafers";
+
 
         } else if (feelsLike <= 65) {
-            recommendation =
-                "Wear comfortable layers and bring a light jacket.";
 
-            addItem(items, "Light jacket");
+            outfit.top =
+                "Pale-blue Oxford shirt";
+
+            outfit.bottom =
+                "Navy tailored trousers";
+
+            outfit.midLayer =
+                "Lightweight navy blazer";
+
+            outfit.outerLayer =
+                "No heavy outer coat";
+
+            outfit.shoes =
+                "Dark brown leather loafers";
+
+
+        } else if (feelsLike <= 78) {
+
+            outfit.top =
+                "White lightweight cotton dress shirt";
+
+            outfit.bottom =
+                "Charcoal lightweight tailored trousers";
+
+            outfit.midLayer =
+                "Unlined navy blazer";
+
+            outfit.outerLayer =
+                "No outer coat";
+
+            outfit.shoes =
+                "Brown leather loafers";
+
 
         } else {
-            recommendation =
-                "Wear comfortable lightweight clothes for class.";
-        }
 
+            outfit.top =
+                "Light-blue cotton-linen dress shirt";
 
-    } else if (occasion === "Outdoor") {
+            outfit.bottom =
+                "Stone lightweight tailored trousers";
 
-        if (feelsLike <= 35) {
-            recommendation =
-                "Dress for the outdoors with a warm coat and several layers.";
+            outfit.midLayer =
+                "Carry an unlined navy blazer";
 
-            addItem(items, "Warm coat");
-            addItem(items, "Layers");
+            outfit.outerLayer =
+                "No outer coat";
 
-        } else if (feelsLike <= 50) {
-            recommendation =
-                "Wear an outdoor jacket and layers you can adjust.";
-
-            addItem(items, "Outdoor jacket");
-            addItem(items, "Layers");
-
-        } else if (feelsLike <= 65) {
-            recommendation =
-                "Wear light outdoor layers that are easy to remove.";
-
-            addItem(items, "Light layers");
-
-        } else {
-            recommendation =
-                "Choose breathable clothing suitable for being outside.";
-
-            addItem(items, "Breathable clothing");
-        }
-
-
-    } else {
-
-        if (feelsLike <= 35) {
-            recommendation =
-                "Keep it casual but warm with a coat and layers.";
-
-            addItem(items, "Warm coat");
-            addItem(items, "Layers");
-
-        } else if (feelsLike <= 50) {
-            recommendation =
-                "Wear a casual outfit with a jacket.";
-
-            addItem(items, "Jacket");
-
-        } else if (feelsLike <= 65) {
-            recommendation =
-                "Wear casual layers with a light jacket nearby.";
-
-            addItem(items, "Light jacket");
-
-        } else {
-            recommendation =
-                "Wear a light and comfortable casual outfit.";
+            outfit.shoes =
+                "Breathable brown leather loafers";
         }
     }
 
 
-    /* TEMPERATURE REASON */
+    /* ---------------------------------
+       CLASS
+    --------------------------------- */
 
-    reasons.push(
-        "At your selected time it should feel like " +
-        Math.round(feelsLike) +
-        "°F."
-    );
+    else if (occasion === "Class") {
+
+        headline =
+            "Comfortable for class while still looking put together.";
 
 
-    /* RAIN */
+        if (feelsLike <= 35) {
+
+            outfit.top =
+                "Grey long-sleeve thermal shirt";
+
+            outfit.bottom =
+                "Dark straight-leg jeans";
+
+            outfit.midLayer =
+                "Navy crewneck sweater";
+
+            outfit.outerLayer =
+                "Black insulated parka";
+
+            outfit.shoes =
+                "Water-resistant casual boots";
+
+
+        } else if (feelsLike <= 50) {
+
+            outfit.top =
+                "White cotton T-shirt";
+
+            outfit.bottom =
+                "Dark straight-leg jeans";
+
+            outfit.midLayer =
+                "Heather-grey crewneck sweater";
+
+            outfit.outerLayer =
+                "Olive bomber jacket";
+
+            outfit.shoes =
+                "Clean leather sneakers";
+
+
+        } else if (feelsLike <= 65) {
+
+            outfit.top =
+                "White cotton T-shirt";
+
+            outfit.bottom =
+                "Straight-leg blue jeans";
+
+            outfit.midLayer =
+                "Blue cotton overshirt";
+
+            outfit.outerLayer =
+                "Lightweight bomber jacket";
+
+            outfit.shoes =
+                "Clean white sneakers";
+
+
+        } else if (feelsLike <= 78) {
+
+            outfit.top =
+                "Navy cotton T-shirt";
+
+            outfit.bottom =
+                "Lightweight tan chinos";
+
+            outfit.midLayer =
+                "Light-blue cotton overshirt";
+
+            outfit.outerLayer =
+                "No heavy outer layer";
+
+            outfit.shoes =
+                "Clean white sneakers";
+
+
+        } else {
+
+            outfit.top =
+                "Breathable white cotton T-shirt";
+
+            outfit.bottom =
+                "Lightweight tan chinos";
+
+            outfit.midLayer =
+                "No mid layer";
+
+            outfit.outerLayer =
+                "No outer layer";
+
+            outfit.shoes =
+                "Breathable mesh sneakers";
+        }
+    }
+
+
+    /* ---------------------------------
+       OUTDOOR
+    --------------------------------- */
+
+    else if (occasion === "Outdoor") {
+
+        headline =
+            "A practical outdoor outfit built around the actual conditions.";
+
+
+        if (feelsLike <= 35) {
+
+            outfit.top =
+                "Thermal long-sleeve base layer";
+
+            outfit.bottom =
+                "Lined hiking pants";
+
+            outfit.midLayer =
+                "Quarter-zip fleece";
+
+            outfit.outerLayer =
+                "Insulated weather-resistant shell jacket";
+
+            outfit.shoes =
+                "Waterproof hiking boots";
+
+
+        } else if (feelsLike <= 50) {
+
+            outfit.top =
+                "Merino long-sleeve base layer";
+
+            outfit.bottom =
+                "Durable hiking trousers";
+
+            outfit.midLayer =
+                "Light fleece quarter-zip";
+
+            outfit.outerLayer =
+                "Water-resistant hiking shell";
+
+            outfit.shoes =
+                "Water-resistant trail shoes";
+
+
+        } else if (feelsLike <= 65) {
+
+            outfit.top =
+                "Moisture-wicking performance T-shirt";
+
+            outfit.bottom =
+                "Lightweight hiking trousers";
+
+            outfit.midLayer =
+                "Thin fleece layer";
+
+            outfit.outerLayer =
+                "Packable windbreaker";
+
+            outfit.shoes =
+                "Trail-running sneakers";
+
+
+        } else if (feelsLike <= 78) {
+
+            outfit.top =
+                "Breathable performance T-shirt";
+
+            outfit.bottom =
+                "Lightweight outdoor pants";
+
+            outfit.midLayer =
+                "No mid layer";
+
+            outfit.outerLayer =
+                "Packable lightweight shell";
+
+            outfit.shoes =
+                "Breathable trail sneakers";
+
+
+        } else {
+
+            outfit.top =
+                "Light moisture-wicking performance shirt";
+
+            outfit.bottom =
+                "Breathable outdoor shorts";
+
+            outfit.midLayer =
+                "No mid layer";
+
+            outfit.outerLayer =
+                "Light packable sun layer";
+
+            outfit.shoes =
+                "Breathable trail sneakers";
+        }
+    }
+
+
+    /* ---------------------------------
+       CASUAL
+    --------------------------------- */
+
+    else {
+
+        headline =
+            "A complete casual outfit matched to the local forecast.";
+
+
+        if (feelsLike <= 35) {
+
+            outfit.top =
+                "Cream knit sweater";
+
+            outfit.bottom =
+                "Dark indigo jeans";
+
+            outfit.midLayer =
+                "Light thermal undershirt";
+
+            outfit.outerLayer =
+                "Camel wool coat";
+
+            outfit.shoes =
+                "Dark brown Chelsea boots";
+
+
+        } else if (feelsLike <= 50) {
+
+            outfit.top =
+                "White heavyweight T-shirt";
+
+            outfit.bottom =
+                "Dark straight-leg jeans";
+
+            outfit.midLayer =
+                "Navy flannel overshirt";
+
+            outfit.outerLayer =
+                "Brown bomber jacket";
+
+            outfit.shoes =
+                "Neutral leather sneakers";
+
+
+        } else if (feelsLike <= 65) {
+
+            outfit.top =
+                "White cotton T-shirt";
+
+            outfit.bottom =
+                "Olive chinos";
+
+            outfit.midLayer =
+                "Navy cotton overshirt";
+
+            outfit.outerLayer =
+                "Lightweight Harrington jacket";
+
+            outfit.shoes =
+                "Clean white sneakers";
+
+
+        } else if (feelsLike <= 78) {
+
+            outfit.top =
+                "Light-blue linen-blend camp-collar shirt";
+
+            outfit.bottom =
+                "Beige lightweight chinos";
+
+            outfit.midLayer =
+                "No mid layer";
+
+            outfit.outerLayer =
+                "Optional lightweight overshirt";
+
+            outfit.shoes =
+                "White canvas sneakers";
+
+
+        } else {
+
+            outfit.top =
+                "White lightweight linen shirt";
+
+            outfit.bottom =
+                "Beige lightweight chinos or tailored shorts";
+
+            outfit.midLayer =
+                "No mid layer";
+
+            outfit.outerLayer =
+                "No outer layer";
+
+            outfit.shoes =
+                "Breathable canvas sneakers";
+        }
+    }
+
+
+    /* ---------------------------------
+       HUMID CONDITIONS
+    --------------------------------- */
+
+    if (
+        weather.humidity >= 75 &&
+        feelsLike >= 70
+    ) {
+
+        if (occasion === "Interview") {
+
+            outfit.top =
+                "Light-blue lightweight cotton-linen dress shirt";
+
+
+        } else if (occasion === "Class") {
+
+            outfit.top =
+                "Breathable lightweight cotton T-shirt";
+
+
+        } else if (occasion === "Outdoor") {
+
+            outfit.top =
+                "Moisture-wicking performance T-shirt";
+
+
+        } else {
+
+            outfit.top =
+                "Lightweight linen-blend shirt";
+        }
+
+
+        reasons.push(
+            areaName +
+            " is forecast to be humid at about " +
+            Math.round(
+                weather.humidity
+            ) +
+            "%, so the top uses a lighter, more breathable fabric."
+        );
+    }
+
+
+    /* ---------------------------------
+       SNOW
+    --------------------------------- */
+
+    const snowExpected =
+        weather.snowfall > 0 ||
+        (
+            weather.weatherCode >= 71 &&
+            weather.weatherCode <= 77
+        ) ||
+        (
+            weather.weatherCode >= 85 &&
+            weather.weatherCode <= 86
+        );
+
+
+    if (snowExpected) {
+
+        if (occasion === "Interview") {
+
+            outfit.outerLayer =
+                "Dark water-resistant wool overcoat";
+
+            outfit.shoes =
+                "Black water-resistant leather boots";
+
+
+        } else if (occasion === "Outdoor") {
+
+            outfit.outerLayer =
+                "Insulated waterproof shell jacket";
+
+            outfit.shoes =
+                "Insulated waterproof hiking boots";
+
+
+        } else {
+
+            outfit.outerLayer =
+                "Insulated water-resistant coat";
+
+            outfit.shoes =
+                "Waterproof boots";
+        }
+
+
+        addAccessory(
+            outfit.accessories,
+            "Warm wool socks"
+        );
+
+
+        addAccessory(
+            outfit.accessories,
+            "Gloves"
+        );
+
+
+        reasons.push(
+            "Snow is expected around " +
+            areaName +
+            ", so waterproof footwear and an insulated outer layer are important."
+        );
+    }
+
+
+    /* ---------------------------------
+       RAIN
+    --------------------------------- */
 
     if (weather.rain >= 60) {
 
-        recommendation +=
-            " Bring an umbrella.";
+        if (occasion === "Interview") {
 
-        addItem(items, "Umbrella");
-        addItem(items, "Rain-ready shoes");
+            if (!snowExpected) {
+
+                outfit.outerLayer =
+                    feelsLike <= 55
+                        ? "Structured water-resistant trench coat"
+                        : "Lightweight water-resistant trench coat";
+            }
+
+
+            outfit.shoes =
+                "Black water-resistant leather loafers or derby shoes";
+
+
+        } else if (occasion === "Outdoor") {
+
+            outfit.outerLayer =
+                "Waterproof breathable shell jacket";
+
+            outfit.shoes =
+                "Water-resistant trail shoes";
+
+
+        } else {
+
+            if (!snowExpected) {
+
+                outfit.outerLayer =
+                    "Lightweight rain-resistant jacket";
+            }
+
+
+            outfit.shoes =
+                "Rain-ready sneakers or boots";
+        }
+
+
+        if (weather.wind < 25) {
+
+            addAccessory(
+                outfit.accessories,
+                "Compact umbrella"
+            );
+
+
+        } else {
+
+            addAccessory(
+                outfit.accessories,
+                "Hooded rain protection"
+            );
+        }
+
 
         reasons.push(
-            "Rain is likely with a " +
-            Math.round(weather.rain) +
-            "% precipitation chance."
+            "The rain chance in " +
+            areaName +
+            " is around " +
+            Math.round(
+                weather.rain
+            ) +
+            "%, so the outfit includes rain protection."
         );
 
 
     } else if (weather.rain >= 30) {
 
-        addItem(items, "Compact umbrella");
+        addAccessory(
+            outfit.accessories,
+            "Compact umbrella"
+        );
+
 
         reasons.push(
-            "There is some chance of rain, so a compact umbrella may be useful."
+            "There is a moderate chance of rain in " +
+            areaName +
+            ", so a compact umbrella is worth bringing."
         );
     }
 
 
-    /* WIND */
+    /* ---------------------------------
+       WIND
+    --------------------------------- */
 
     if (weather.wind >= 20) {
 
-        recommendation +=
-            " Add a wind-resistant outer layer.";
+        if (
+            outfit.outerLayer ===
+            "No outer layer" ||
+            outfit.outerLayer ===
+            "No outer coat" ||
+            outfit.outerLayer ===
+            "No heavy outer layer"
+        ) {
 
-        addItem(
-            items,
-            "Wind-resistant layer"
-        );
+            outfit.outerLayer =
+                "Lightweight wind-resistant jacket";
+        }
+
 
         reasons.push(
-            "Wind is expected around " +
-            Math.round(weather.wind) +
-            " mph."
+            "Winds around " +
+            Math.round(
+                weather.wind
+            ) +
+            " mph make a wind-blocking layer useful."
         );
     }
 
 
-    /* OUTDOOR EXTRA */
+    /* ---------------------------------
+       VERY COLD
+    --------------------------------- */
+
+    if (feelsLike <= 32) {
+
+        addAccessory(
+            outfit.accessories,
+            "Warm scarf"
+        );
+
+
+        addAccessory(
+            outfit.accessories,
+            "Gloves"
+        );
+    }
+
+
+    /* ---------------------------------
+       HOT
+    --------------------------------- */
+
+    if (feelsLike >= 80) {
+
+        addAccessory(
+            outfit.accessories,
+            "Water bottle"
+        );
+    }
+
+
+    /* ---------------------------------
+       SUNNY
+    --------------------------------- */
 
     if (
-        occasion === "Outdoor" &&
-        weather.rain >= 30
+        feelsLike >= 65 &&
+        (
+            weather.weatherCode === 0 ||
+            weather.weatherCode === 1
+        )
     ) {
-        addItem(
-            items,
-            "Water-resistant outerwear"
+
+        addAccessory(
+            outfit.accessories,
+            "Sunglasses"
         );
     }
+
+
+    /* ---------------------------------
+       THUNDERSTORM
+    --------------------------------- */
+
+    if (weather.weatherCode >= 95) {
+
+        addAccessory(
+            outfit.accessories,
+            "Check conditions again before leaving"
+        );
+
+
+        reasons.push(
+            "Thunderstorms are possible, so check the latest local conditions before heading out."
+        );
+    }
+
+
+    /* ---------------------------------
+       MAIN LOCAL EXPLANATION
+    --------------------------------- */
+
+    reasons.unshift(
+        "At your selected time in " +
+        areaName +
+        ", it should feel like " +
+        Math.round(
+            feelsLike
+        ) +
+        "°F with about " +
+        Math.round(
+            weather.humidity
+        ) +
+        "% humidity, a " +
+        Math.round(
+            weather.rain
+        ) +
+        "% precipitation chance, and winds around " +
+        Math.round(
+            weather.wind
+        ) +
+        " mph."
+    );
 
 
     return {
-        recommendation: recommendation,
 
-        reason: reasons.join(" "),
+        headline:
+            headline,
 
-        items: items,
+        outfit:
+            outfit,
+
+        reason:
+            reasons.join(" "),
 
         weatherDescription:
             getWeatherDescription(
@@ -525,58 +1296,115 @@ function createRecommendation(
 }
 
 
-function addItem(items, item) {
-    if (!items.includes(item)) {
-        items.push(item);
+function addAccessory(
+    accessories,
+    item
+) {
+
+    if (
+        !accessories.includes(
+            item
+        )
+    ) {
+
+        accessories.push(
+            item
+        );
     }
 }
 
 
 /* ---------------------------------
-   WEATHER DESCRIPTION
+   WMO WEATHER DESCRIPTION
 --------------------------------- */
 
-function getWeatherDescription(code) {
+function getWeatherDescription(
+    code
+) {
 
     if (code === 0) {
-        return "Clear";
+
+        return "Clear sky";
     }
 
-    if (code === 1 || code === 2) {
+
+    if (code === 1) {
+
+        return "Mainly clear";
+    }
+
+
+    if (code === 2) {
+
         return "Partly cloudy";
     }
 
+
     if (code === 3) {
+
         return "Overcast";
     }
 
-    if (code === 45 || code === 48) {
-        return "Foggy";
+
+    if (
+        code === 45 ||
+        code === 48
+    ) {
+
+        return "Fog";
     }
 
-    if (code >= 51 && code <= 57) {
+
+    if (
+        code >= 51 &&
+        code <= 57
+    ) {
+
         return "Drizzle";
     }
 
-    if (code >= 61 && code <= 67) {
+
+    if (
+        code >= 61 &&
+        code <= 67
+    ) {
+
         return "Rain";
     }
 
-    if (code >= 71 && code <= 77) {
+
+    if (
+        code >= 71 &&
+        code <= 77
+    ) {
+
         return "Snow";
     }
 
-    if (code >= 80 && code <= 82) {
+
+    if (
+        code >= 80 &&
+        code <= 82
+    ) {
+
         return "Rain showers";
     }
 
-    if (code >= 85 && code <= 86) {
+
+    if (
+        code >= 85 &&
+        code <= 86
+    ) {
+
         return "Snow showers";
     }
 
+
     if (code >= 95) {
+
         return "Thunderstorm";
     }
+
 
     return "Mixed conditions";
 }
@@ -594,190 +1422,303 @@ function renderWeather(
     occasion
 ) {
 
-    resultArea.innerHTML = "";
+    resultArea.innerHTML =
+        "";
 
 
     const advice =
         createRecommendation(
             weather,
-            occasion
+            occasion,
+            location
         );
 
 
     const brief =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     brief.className =
         "weather-brief";
 
 
-    /* LEFT PANEL */
+    /* RECOMMENDATION */
 
     const recommendationPanel =
-        document.createElement("article");
+        document.createElement(
+            "article"
+        );
+
 
     recommendationPanel.className =
         "recommendation-panel";
 
 
     const label =
-        document.createElement("p");
+        document.createElement(
+            "p"
+        );
 
-    label.className = "result-label";
+
+    label.className =
+        "result-label";
+
 
     label.textContent =
-        "YOUR RECOMMENDATION";
+        "YOUR EXACT OUTFIT";
 
 
     const occasionLine =
-        document.createElement("p");
+        document.createElement(
+            "p"
+        );
+
 
     occasionLine.className =
         "occasion-line";
+
 
     occasionLine.textContent =
         occasion;
 
 
     const locationName =
-        document.createElement("h3");
+        document.createElement(
+            "h3"
+        );
+
 
     locationName.className =
         "result-location";
 
 
-    if (location.country) {
-
-        locationName.textContent =
-            location.name +
-            ", " +
-            location.country;
-
-    } else {
-
-        locationName.textContent =
-            location.name;
-    }
+    locationName.textContent =
+        getAreaName(
+            location
+        );
 
 
     const eventLine =
-        document.createElement("p");
+        document.createElement(
+            "p"
+        );
+
 
     eventLine.className =
         "event-time-line";
 
+
     eventLine.textContent =
-        formatReadableDate(eventDate) +
+        formatReadableDate(
+            eventDate
+        ) +
         " · " +
-        formatReadableTime(eventTime) +
-        " · LOCAL TIME";
+        formatReadableTime(
+            eventTime
+        ) +
+        " · DESTINATION LOCAL TIME";
 
 
     const condition =
-        document.createElement("p");
+        document.createElement(
+            "p"
+        );
+
 
     condition.className =
         "result-condition";
+
 
     condition.textContent =
         advice.weatherDescription;
 
 
-    const recommendationText =
-        document.createElement("p");
+    const headline =
+        document.createElement(
+            "p"
+        );
 
-    recommendationText.className =
+
+    headline.className =
         "recommendation-text";
 
-    recommendationText.textContent =
-        advice.recommendation;
 
-
-    const reason =
-        document.createElement("p");
-
-    reason.className =
-        "recommendation-reason";
-
-    reason.textContent =
-        advice.reason;
-
-
-    const tags =
-        document.createElement("div");
-
-    tags.className =
-        "recommendation-tags";
-
-
-    advice.items.forEach(
-        function(item) {
-
-            const tag =
-                document.createElement(
-                    "span"
-                );
-
-            tag.className =
-                "recommendation-tag";
-
-            tag.textContent = item;
-
-            tags.appendChild(tag);
-        }
-    );
+    headline.textContent =
+        advice.headline;
 
 
     recommendationPanel.appendChild(
         label
     );
 
+
     recommendationPanel.appendChild(
         occasionLine
     );
+
 
     recommendationPanel.appendChild(
         locationName
     );
 
+
     recommendationPanel.appendChild(
         eventLine
     );
+
 
     recommendationPanel.appendChild(
         condition
     );
 
-    recommendationPanel.appendChild(
-        recommendationText
-    );
 
     recommendationPanel.appendChild(
-        reason
-    );
-
-    recommendationPanel.appendChild(
-        tags
+        headline
     );
 
 
-    /* RIGHT PANEL */
+    /* OUTFIT */
+
+    const outfitSection =
+        document.createElement(
+            "section"
+        );
+
+
+    outfitSection.className =
+        "outfit-section";
+
+
+    const outfitTitle =
+        document.createElement(
+            "p"
+        );
+
+
+    outfitTitle.className =
+        "outfit-title";
+
+
+    outfitTitle.textContent =
+        "COMPLETE OUTFIT";
+
+
+    const outfitGrid =
+        document.createElement(
+            "div"
+        );
+
+
+    outfitGrid.className =
+        "outfit-grid";
+
+
+    addOutfitRow(
+        outfitGrid,
+        "Top",
+        advice.outfit.top
+    );
+
+
+    addOutfitRow(
+        outfitGrid,
+        "Bottom",
+        advice.outfit.bottom
+    );
+
+
+    addOutfitRow(
+        outfitGrid,
+        "Mid Layer",
+        advice.outfit.midLayer
+    );
+
+
+    addOutfitRow(
+        outfitGrid,
+        "Outer Layer",
+        advice.outfit.outerLayer
+    );
+
+
+    addOutfitRow(
+        outfitGrid,
+        "Shoes",
+        advice.outfit.shoes
+    );
+
+
+    addOutfitRow(
+        outfitGrid,
+        "Accessories",
+        advice.outfit.accessories
+            .length > 0
+            ? advice.outfit.accessories
+                .join(", ")
+            : "None needed"
+    );
+
+
+    outfitSection.appendChild(
+        outfitTitle
+    );
+
+
+    outfitSection.appendChild(
+        outfitGrid
+    );
+
+
+    recommendationPanel.appendChild(
+        outfitSection
+    );
+
+
+    const localNote =
+        document.createElement(
+            "p"
+        );
+
+
+    localNote.className =
+        "local-weather-note";
+
+
+    localNote.textContent =
+        advice.reason;
+
+
+    recommendationPanel.appendChild(
+        localNote
+    );
+
+
+    /* FORECAST PANEL */
 
     const forecastPanel =
-        document.createElement("aside");
+        document.createElement(
+            "aside"
+        );
+
 
     forecastPanel.className =
         "forecast-panel";
 
 
     const forecastTitle =
-        document.createElement("p");
+        document.createElement(
+            "p"
+        );
+
 
     forecastTitle.className =
         "forecast-title";
 
+
     forecastTitle.textContent =
-        "FORECAST AT YOUR TIME";
+        "LOCAL CONDITIONS";
 
 
     forecastPanel.appendChild(
@@ -790,7 +1731,8 @@ function renderWeather(
         "Temperature",
         Math.round(
             weather.temperature
-        ) + "°F"
+        ) +
+        "°F"
     );
 
 
@@ -799,16 +1741,28 @@ function renderWeather(
         "Feels Like",
         Math.round(
             weather.apparentTemperature
-        ) + "°F"
+        ) +
+        "°F"
     );
 
 
     addMetric(
         forecastPanel,
-        "Rain Chance",
+        "Humidity",
+        Math.round(
+            weather.humidity
+        ) +
+        "%"
+    );
+
+
+    addMetric(
+        forecastPanel,
+        "Precipitation",
         Math.round(
             weather.rain
-        ) + "%"
+        ) +
+        "%"
     );
 
 
@@ -817,7 +1771,19 @@ function renderWeather(
         "Wind",
         Math.round(
             weather.wind
-        ) + " mph"
+        ) +
+        " mph"
+    );
+
+
+    addMetric(
+        forecastPanel,
+        "Snow",
+        weather.snowfall > 0
+            ? weather.snowfall
+                .toFixed(1) +
+                " cm"
+            : "None"
     );
 
 
@@ -834,42 +1800,61 @@ function renderWeather(
         recommendationPanel
     );
 
+
     brief.appendChild(
         forecastPanel
     );
 
 
-    /* BEFORE YOU LEAVE */
+    resultArea.appendChild(
+        brief
+    );
+
+
+    /* BEFORE LEAVING */
 
     const beforeYouLeave =
-        document.createElement("section");
+        document.createElement(
+            "section"
+        );
+
 
     beforeYouLeave.className =
         "before-you-leave";
 
 
     const beforeTitle =
-        document.createElement("h3");
+        document.createElement(
+            "h3"
+        );
+
 
     beforeTitle.textContent =
         "BEFORE YOU LEAVE";
 
 
     const beforeText =
-        document.createElement("p");
+        document.createElement(
+            "p"
+        );
 
 
-    if (advice.items.length > 0) {
+    if (
+        advice.outfit.accessories
+            .length > 0
+    ) {
 
         beforeText.textContent =
-            "Consider: " +
-            advice.items.join(", ") +
+            "Bring: " +
+            advice.outfit.accessories
+                .join(", ") +
             ".";
+
 
     } else {
 
         beforeText.textContent =
-            "No special weather preparation is needed.";
+            "No additional weather accessories are needed for this forecast.";
     }
 
 
@@ -877,12 +1862,11 @@ function renderWeather(
         beforeTitle
     );
 
+
     beforeYouLeave.appendChild(
         beforeText
     );
 
-
-    resultArea.appendChild(brief);
 
     resultArea.appendChild(
         beforeYouLeave
@@ -891,7 +1875,71 @@ function renderWeather(
 
 
 /* ---------------------------------
-   METRIC
+   OUTFIT ROW
+--------------------------------- */
+
+function addOutfitRow(
+    parent,
+    labelText,
+    valueText
+) {
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+
+    row.className =
+        "outfit-row";
+
+
+    const label =
+        document.createElement(
+            "span"
+        );
+
+
+    label.className =
+        "outfit-label";
+
+
+    label.textContent =
+        labelText;
+
+
+    const value =
+        document.createElement(
+            "span"
+        );
+
+
+    value.className =
+        "outfit-value";
+
+
+    value.textContent =
+        valueText;
+
+
+    row.appendChild(
+        label
+    );
+
+
+    row.appendChild(
+        value
+    );
+
+
+    parent.appendChild(
+        row
+    );
+}
+
+
+/* ---------------------------------
+   FORECAST METRIC
 --------------------------------- */
 
 function addMetric(
@@ -901,82 +1949,131 @@ function addMetric(
 ) {
 
     const metric =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     metric.className =
         "weather-metric";
 
 
     const label =
-        document.createElement("span");
+        document.createElement(
+            "span"
+        );
+
 
     label.className =
         "metric-label";
+
 
     label.textContent =
         labelText;
 
 
     const value =
-        document.createElement("span");
+        document.createElement(
+            "span"
+        );
+
 
     value.className =
         "metric-value";
+
 
     value.textContent =
         valueText;
 
 
-    metric.appendChild(label);
-    metric.appendChild(value);
+    metric.appendChild(
+        label
+    );
 
-    parent.appendChild(metric);
+
+    metric.appendChild(
+        value
+    );
+
+
+    parent.appendChild(
+        metric
+    );
 }
 
 
 /* ---------------------------------
-   READABLE DATE + TIME
+   DATE / TIME FORMATTING
 --------------------------------- */
 
-function formatReadableDate(dateValue) {
+function formatReadableDate(
+    dateValue
+) {
 
     const parts =
         dateValue.split("-");
 
-    const date = new Date(
-        Number(parts[0]),
-        Number(parts[1]) - 1,
-        Number(parts[2])
-    );
+
+    const date =
+        new Date(
+            Number(
+                parts[0]
+            ),
+            Number(
+                parts[1]
+            ) - 1,
+            Number(
+                parts[2]
+            )
+        );
 
 
     return date.toLocaleDateString(
         "en-US",
         {
-            month: "long",
-            day: "numeric",
-            year: "numeric"
+            month:
+                "long",
+
+            day:
+                "numeric",
+
+            year:
+                "numeric"
         }
     );
 }
 
 
-function formatReadableTime(timeValue) {
+function formatReadableTime(
+    timeValue
+) {
 
     const parts =
         timeValue.split(":");
 
-    let hours = Number(parts[0]);
 
-    const minutes = parts[1];
+    let hours =
+        Number(
+            parts[0]
+        );
+
+
+    const minutes =
+        parts[1];
+
 
     const period =
-        hours >= 12 ? "PM" : "AM";
+        hours >= 12
+            ? "PM"
+            : "AM";
 
 
-    hours = hours % 12;
+    hours =
+        hours % 12;
+
 
     if (hours === 0) {
+
         hours = 12;
     }
 
@@ -996,22 +2093,26 @@ function formatForecastHour(
 ) {
 
     const time =
-        forecastTime.split("T")[1];
+        forecastTime
+            .split("T")[1];
 
-    return formatReadableTime(time);
+
+    return formatReadableTime(
+        time
+    );
 }
 
 
 /* ---------------------------------
-   PAGE STATES
+   STATES
 --------------------------------- */
 
 function showLoading() {
 
     showStatus(
         "loading",
-        "Checking the forecast...",
-        "Looking up the location and weather for your selected time."
+        "Preparing your outfit...",
+        "Checking the destination's local forecast and working out what to wear."
     );
 }
 
@@ -1020,8 +2121,8 @@ function showNoResults() {
 
     showStatus(
         "error",
-        "No matching city was found.",
-        "Try another city or make the location more specific."
+        "No matching location was found.",
+        "Try the city again or add its state, region, or country. Example: Boston, MA."
     );
 }
 
@@ -1031,7 +2132,7 @@ function showError() {
     showStatus(
         "error",
         "The forecast could not be loaded.",
-        "Check your connection and make sure the selected date is within the forecast range."
+        "Check your connection and make sure the selected date is within the available forecast range."
     );
 }
 
@@ -1042,45 +2143,66 @@ function showStatus(
     messageText
 ) {
 
-    resultArea.innerHTML = "";
+    resultArea.innerHTML =
+        "";
 
 
     const status =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     status.className =
-        "status-state " + type;
+        "status-state " +
+        type;
 
 
     const title =
-        document.createElement("h3");
+        document.createElement(
+            "h3"
+        );
+
 
     title.textContent =
         titleText;
 
 
     const message =
-        document.createElement("p");
+        document.createElement(
+            "p"
+        );
+
 
     message.textContent =
         messageText;
 
 
-    status.appendChild(title);
+    status.appendChild(
+        title
+    );
 
-    status.appendChild(message);
 
-    resultArea.appendChild(status);
+    status.appendChild(
+        message
+    );
+
+
+    resultArea.appendChild(
+        status
+    );
 }
 
 
 /* ---------------------------------
-   FORM MESSAGES
+   FORM ERROR
 --------------------------------- */
 
 function clearFormMessage() {
 
-    formMessage.textContent = "";
+    formMessage.textContent =
+        "";
+
 
     formMessage.className =
         "form-message";
@@ -1091,6 +2213,7 @@ function showFormError(message) {
 
     formMessage.textContent =
         message;
+
 
     formMessage.className =
         "form-message error";
