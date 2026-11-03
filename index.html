@@ -3,17 +3,27 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <meta
         name="description"
-        content="A weather outfit planner that turns location, time, occasion, and forecast data into practical clothing and preparation recommendations."
+        content="A weather-based outfit planner that recommends a specific outfit for your destination, date, time, and occasion."
     >
 
-    <title>Weather Outfit Planner</title>
+    <title>
+        Weather Outfit Planner
+    </title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 </head>
+
 
 <body>
 
@@ -21,9 +31,12 @@
 
         <div class="header-inner">
 
-            <p class="brand">
+            <a
+                class="brand"
+                href="index.html"
+            >
                 WEATHER OUTFIT PLANNER
-            </p>
+            </a>
 
             <p class="header-meta">
                 PERSONAL WEATHER BRIEF
@@ -36,73 +49,73 @@
 
     <main>
 
-        <!-- HERO -->
-
         <section class="hero">
 
-            <div>
+            <p class="hero-kicker">
+                FORECAST PASSPORT
+            </p>
 
-                <p class="hero-kicker">
-                    FORECAST PASSPORT
-                </p>
-
-                <h1>
-                    Forecast first.<br>
-                    Dress second.
-                </h1>
-
-            </div>
+            <h1>
+                Forecast first.<br>
+                Dress second.
+            </h1>
 
             <p class="hero-copy">
-                Choose where you are going, when you will be there,
-                and what you are doing. The forecast becomes a
-                practical outfit and preparation brief.
+                Tell us where you're going,
+                when you'll be there,
+                and what you're doing.
+                We'll turn the local forecast
+                into one specific outfit.
             </p>
 
         </section>
 
 
-        <!-- SEARCH -->
+        <section
+            class="planner-section"
+            aria-labelledby="planner-heading"
+        >
 
-        <section class="search-section"
-                 aria-labelledby="search-heading">
+            <div class="section-heading">
 
-            <div class="section-top">
+                <p class="section-number">
+                    01 / PREPARE
+                </p>
 
-                <span class="section-number">
-                    01
-                </span>
-
-                <h2 id="search-heading">
-                    PREPARE YOUR BRIEF
+                <h2 id="planner-heading">
+                    Build your brief
                 </h2>
 
             </div>
 
 
-            <form id="weather-form" novalidate>
-
-                <!-- CITY -->
+            <form
+                id="weather-form"
+                novalidate
+            >
 
                 <div class="field city-field">
 
                     <label for="city">
-                        CITY
+                        CITY OR AREA
                     </label>
 
                     <input
                         id="city"
                         name="city"
                         type="text"
-                        placeholder="Boston"
+                        placeholder="Boston, MA"
                         autocomplete="off"
                         required
                     >
 
+                    <p class="field-help">
+                        Add a state, region, or country
+                        when needed for a more precise match.
+                    </p>
+
                 </div>
 
-
-                <!-- EVENT DETAILS -->
 
                 <div class="event-grid">
 
@@ -114,7 +127,7 @@
 
                         <input
                             id="event-date"
-                            name="eventDate"
+                            name="event-date"
                             type="date"
                             required
                         >
@@ -130,7 +143,7 @@
 
                         <input
                             id="event-time"
-                            name="eventTime"
+                            name="event-time"
                             type="time"
                             required
                         >
@@ -149,6 +162,15 @@
                             name="occasion"
                             required
                         >
+
+                            <option
+                                value=""
+                                selected
+                                disabled
+                            >
+                                Choose occasion
+                            </option>
+
                             <option value="Interview">
                                 Interview
                             </option>
@@ -164,6 +186,7 @@
                             <option value="Outdoor">
                                 Outdoor
                             </option>
+
                         </select>
 
                     </div>
@@ -171,60 +194,63 @@
                 </div>
 
 
-                <!-- ACTION -->
-
                 <button
                     class="prepare-button"
                     type="submit"
                 >
-                    Prepare Brief
+                    PREPARE BRIEF
                 </button>
 
 
-                <p id="form-message"
-                   class="form-message"
-                   aria-live="polite">
-                </p>
+                <p
+                    id="form-message"
+                    class="form-message"
+                    aria-live="polite"
+                ></p>
 
             </form>
 
         </section>
 
 
-        <!-- RESULT -->
+        <section
+            class="result-section"
+            aria-labelledby="result-heading"
+        >
 
-        <section class="result-section"
-                 aria-labelledby="result-heading">
+            <div class="section-heading">
 
-            <div class="section-top">
-
-                <span class="section-number">
-                    02
-                </span>
+                <p class="section-number">
+                    02 / YOUR BRIEF
+                </p>
 
                 <h2 id="result-heading">
-                    YOUR WEATHER BRIEF
+                    Your weather brief
                 </h2>
 
             </div>
 
 
-            <div id="result-area"
-                 class="result-area">
+            <div
+                id="result-area"
+                aria-live="polite"
+            >
 
                 <div class="empty-state">
 
-                    <p class="empty-label">
-                        READY
+                    <p class="empty-number">
+                        00
                     </p>
 
                     <h3>
-                        Tell me where you're going and what you're doing.
+                        Nothing packed yet.
                     </h3>
 
                     <p>
-                        Choose a city, date, time, and occasion to get
-                        a weather-based outfit recommendation.
+                        Choose a city or area,
+                        date, time, and occasion.
+                        Your local weather outfit
+                        will appear here.
                     </p>
 
                 </div>
@@ -234,12 +260,17 @@
         </section>
 
 
-        <!-- SOURCE -->
-
         <section class="source-section">
 
             <p>
-                Weather data provided by Open-Meteo.
+                Forecast and location data provided by
+                <a
+                    href="https://open-meteo.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Open-Meteo
+                </a>.
             </p>
 
         </section>
@@ -247,14 +278,15 @@
     </main>
 
 
-    <footer>
+    <footer class="site-footer">
 
         <p>
-            Weather Outfit Planner
+            WEATHER OUTFIT PLANNER
         </p>
 
         <p>
-            Mini Project 3
+            Built with HTML, CSS,
+            JavaScript & Open-Meteo
         </p>
 
     </footer>
