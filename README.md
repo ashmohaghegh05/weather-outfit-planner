@@ -167,7 +167,7 @@ Possible pieces include:
 
 ## Outdoor
 
-The recommendation focuses more on weather protection and movement.
+The recommendation focuses on weather protection and movement.
 
 Possible pieces include:
 
@@ -235,7 +235,7 @@ The forecast uses the destination's local timezone.
 
 # Application States
 
-The project includes the following states:
+The project includes the following states.
 
 ## Empty
 
@@ -291,13 +291,13 @@ I created three trial design directions before choosing the main direction.
 
 ## Option A
 
-Editorial Weather Brief
+**Editorial Weather Brief**
 
-This version was very clean and editorial, but felt slightly too serious.
+This version was clean and editorial, but felt slightly too serious.
 
 ## Option B
 
-Weather Command Desk
+**Weather Command Desk**
 
 This version had a darker operational/dashboard appearance.
 
@@ -305,13 +305,13 @@ It made the weather information strong, but the project started to feel more lik
 
 ## Option C
 
-Forecast Passport
+**Forecast Passport**
 
 This direction made the outfit recommendation more important than the raw forecast.
 
 I selected Option C as the base direction.
 
-The final interface later evolved further into a more colorful, playful version while keeping the Forecast Passport idea and recommendation-first hierarchy.
+The final interface later evolved further into a more colorful and playful version while keeping the Forecast Passport idea and recommendation-first hierarchy.
 
 ---
 
@@ -334,7 +334,7 @@ As I built and tested the project, I expanded the tool to include:
 - snowfall
 - more detailed rain and wind logic
 - exact outfit pieces
-- city/state/country display
+- city, region, and country display
 - a playful final visual design
 
 The original proposal remains in the repository to show where the project started.
@@ -440,7 +440,7 @@ The main files include:
 
 # AI Reflection
 
-## One AI output I did not accept as-is
+## One AI Output I Did Not Accept As-Is
 
 One AI output I did not accept as-is was the first design direction.
 
@@ -464,11 +464,9 @@ The final version uses a more playful and colorful interface while keeping the u
 
 I knew these changes were better because the purpose of the tool is not just to read weather numbers. The user should be able to quickly see **what to wear and why**.
 
-### Commit showing this design decision
+### Commit Showing This Design Decision
 
-**Replace the link below with the actual GitHub URL for your `Create option-c.html` commit before submission:**
-
-`PASTE-OPTION-C-COMMIT-URL-HERE`
+https://github.com/ashmohaghegh05/weather-outfit-planner/commit/c5837673cd67fdfe5e19602b7f2efeffcdcfb78c
 
 ---
 
