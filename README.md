@@ -1,303 +1,374 @@
 # Weather Outfit Planner
 
-**Who opens this and what they need in the first five seconds:**  
-I open this tool when I want to know what the weather actually means for my day — not just the temperature, but what I should wear and what I should bring before I leave.
+Weather Outfit Planner helps a user decide **exactly what to wear** for a specific destination, date, time, and occasion.
 
-## What This Tool Does
+Instead of acting like a normal weather dashboard, the project uses local forecast data to work out a complete outfit.
 
-Weather Outfit Planner turns a city forecast into a practical clothing and preparation recommendation.
+The main idea is:
 
-Instead of only showing raw weather data, the tool uses the forecast to answer questions such as:
-
-- Do I need a coat or just a light jacket?
-- Should I bring an umbrella?
-- Will strong wind make it feel colder?
-- Is the weather warm enough for lighter clothing?
-- Is there anything important I should bring before leaving?
-
-The goal is to turn weather data into a decision that can be understood in a few seconds.
-
-## Live Website
-
-[Open Weather Outfit Planner](https://ashmohaghegh05.github.io/weather-outfit-planner/)
-
-## Project Repository
-
-[View the GitHub Repository](https://github.com/ashmohaghegh05/weather-outfit-planner)
-
-## How to Use It
-
-### 1. Enter a City
-
-Type the name of a city into the search field.
-
-For example:
-
-```text
-Boston
-```
-
-### 2. Prepare the Weather Brief
-
-Click **Prepare Brief**.
-
-The page first looks up the location and then requests the weather forecast for that city's coordinates.
-
-### 3. Read the Recommendation
-
-The tool uses the forecast to work out a recommendation for:
-
-- What to wear
-- Whether a jacket or coat is needed
-- Whether to bring an umbrella
-- Whether wind or rain should affect preparation
-- What additional items may be useful before leaving
-
-### 4. Review the Forecast Details
-
-The recommendation is supported by weather information such as:
-
-- Forecast high
-- Forecast low
-- Apparent temperature
-- Rain probability
-- Wind speed
-- Weather conditions
-
-You can search another city at any time without reloading the page.
+> **The weather is the evidence. The outfit is the answer.**
 
 ---
 
-# The API
+## Live Site
+
+https://ashmohaghegh05.github.io/weather-outfit-planner/
+
+## GitHub Repository
+
+https://github.com/ashmohaghegh05/weather-outfit-planner
+
+---
+
+# What the Tool Does
+
+The user chooses:
+
+- city or area
+- date
+- time
+- occasion
+
+Available occasions are:
+
+- Interview
+- Class
+- Casual
+- Outdoor
+
+The application then:
+
+1. finds the selected location
+2. gets its latitude and longitude
+3. fetches the local hourly weather forecast
+4. finds the forecast closest to the selected time
+5. evaluates the local conditions
+6. creates a specific outfit recommendation
+
+---
+
+# Exact Outfit Recommendation
+
+The final result gives the user a complete outfit instead of generic advice.
+
+It recommends:
+
+- Top
+- Bottom
+- Mid Layer
+- Outer Layer
+- Shoes
+- Accessories
+
+For example, instead of saying:
+
+`Wear something warm.`
+
+the application can recommend:
+
+- Light-blue Oxford shirt
+- Charcoal tailored trousers
+- Navy merino sweater
+- Dark wool overcoat
+- Black leather shoes
+- Warm scarf and gloves
+
+---
+
+# Local Weather Conditions
+
+The recommendation is based on weather for the selected destination and time.
+
+The application considers:
+
+- temperature
+- feels-like temperature
+- humidity
+- precipitation probability
+- snowfall
+- wind speed
+- weather condition
+
+The recommendation changes when conditions change.
+
+For example:
+
+- high humidity causes the app to choose more breathable materials
+- rain can add a trench coat, rain jacket, umbrella, or water-resistant shoes
+- snow can add waterproof footwear and insulated layers
+- strong wind can add a wind-resistant outer layer
+- hot weather reduces layers and may add water and sunglasses
+- cold weather can add gloves, scarves, and warmer coats
+
+---
+
+# Area-Specific Results
+
+The user can enter a city or make the location more specific.
+
+Examples:
+
+`Boston, MA`
+
+`Karachi, Pakistan`
+
+The result displays the matched:
+
+- city
+- region or state
+- country
+
+The weather recommendation is based on forecast data for that location rather than a general assumption about the city.
+
+---
+
+# Occasion-Based Recommendations
+
+## Interview
+
+The outfit remains professional while adapting to weather conditions.
+
+Possible pieces include:
+
+- Oxford shirts
+- tailored trousers
+- blazers
+- trench coats
+- wool coats
+- leather loafers
+- derby shoes
+
+## Class
+
+The recommendation focuses on comfort and practical layering.
+
+Possible pieces include:
+
+- T-shirts
+- jeans
+- chinos
+- overshirts
+- sweaters
+- bomber jackets
+- sneakers
+
+## Casual
+
+The recommendation is relaxed but coordinated.
+
+Possible pieces include:
+
+- linen shirts
+- T-shirts
+- chinos
+- jeans
+- lightweight jackets
+- sneakers
+
+## Outdoor
+
+The recommendation focuses more on weather protection and movement.
+
+Possible pieces include:
+
+- performance shirts
+- thermal layers
+- fleece
+- hiking trousers
+- waterproof shells
+- trail shoes
+- hiking boots
+
+---
+
+# API
 
 This project uses **Open-Meteo**.
 
-Open-Meteo documentation:
+Documentation:
 
 https://open-meteo.com/en/docs
 
-The project uses two parts of Open-Meteo.
+The project uses two API requests.
 
-## Geocoding API
+## Geocoding
 
-The first request converts the city entered by the user into geographic coordinates.
+The first request converts the user's location into information including:
 
-Useful fields include:
+- location name
+- state or region
+- country
+- latitude
+- longitude
 
-- `name`
-- `latitude`
-- `longitude`
-- `country`
-- `timezone`
+## Weather Forecast
 
-The latitude and longitude are then used in the second request.
+The second request uses the latitude and longitude to retrieve hourly weather data.
 
-## Forecast API
+The application uses:
 
-The second request gets weather data for those coordinates.
-
-The project uses forecast information such as:
-
-- `temperature_2m_max`
-- `temperature_2m_min`
-- `apparent_temperature_max`
-- `apparent_temperature_min`
-- `precipitation_probability_max`
+- `temperature_2m`
+- `apparent_temperature`
+- `relative_humidity_2m`
+- `precipitation_probability`
+- `snowfall`
 - `weather_code`
-- `wind_speed_10m_max`
+- `wind_speed_10m`
 
-Open-Meteo does not require an API key for this project.
-
----
-
-# What the Page Works Out
-
-The important part of the project is not simply displaying API data.
-
-JavaScript reads the forecast and turns it into a recommendation.
-
-For example:
-
-- Very cold weather can produce a warm-coat and layering recommendation.
-- Cool weather can produce a light-jacket recommendation.
-- Hot weather can produce a lighter-clothing recommendation.
-- High rain probability can add an umbrella recommendation.
-- Strong wind can add an outer-layer recommendation.
-- Apparent temperature can be used when the weather feels meaningfully different from the actual temperature.
-
-The result explains the main reason behind the recommendation so the user can understand how the weather affected the answer.
+The forecast uses the destination's local timezone.
 
 ---
 
-# Main Project Flow
+# How to Use the Tool
 
-The basic flow of the application is:
-
-```text
-User enters a city
-        ↓
-Validate the input
-        ↓
-Fetch matching location
-        ↓
-Read latitude + longitude
-        ↓
-Fetch weather forecast
-        ↓
-Read forecast data
-        ↓
-Apply recommendation rules
-        ↓
-Render the weather brief
-```
-
-This means the project uses one API response to create the request for the next API.
+1. Open the live site.
+2. Enter a city or area.
+3. Select a date.
+4. Select a time.
+5. Select an occasion.
+6. Click **Prepare Brief**.
+7. Read the exact outfit recommendation.
+8. Check the local weather conditions.
+9. Review the **Before You Leave** section for useful accessories.
 
 ---
 
 # Application States
 
-The interface intentionally handles the different states required for Mini Project 3.
+The project includes the following states:
 
 ## Empty
 
-Before the user searches:
-
-**Enter a city to prepare your weather brief.**
-
-No fake weather information is displayed.
+Shown before the user has prepared a brief.
 
 ## Loading
 
-While the API requests are running:
-
-**Checking the forecast...**
-
-The page remains usable instead of appearing frozen.
+Shown while the location and weather data are being fetched.
 
 ## Invalid Input
 
-If the city field is empty:
-
-**Enter a city before searching.**
-
-No API request is sent.
+Shown when a required field is missing or the selected date is outside the available range.
 
 ## No Results
 
-If the city cannot be found:
-
-**No matching city was found. Try a different search.**
-
-The forecast request is not made without valid coordinates.
+Shown when the location cannot be found.
 
 ## Error
 
-If an API request fails:
-
-**The forecast could not be loaded. Please try again.**
-
-The user can search again without reloading the page.
+Shown when the weather request fails.
 
 ## In Use
 
-When both requests succeed, the page displays:
-
-- City and country
-- Weather description
-- Outfit recommendation
-- Explanation
-- Forecast high and low
-- Apparent temperature
-- Rain probability
-- Wind speed
-- What to bring
+Shows the complete outfit, local conditions, explanation, and accessories.
 
 ---
 
-# Design Direction
+# Design
 
-Before building the final interface, I created and compared three visual directions.
+The final interface uses a playful editorial style.
 
-## Option A — Editorial Weather Brief
+The design includes:
 
-A light editorial interface with oversized forecast information and a simple newspaper-like structure.
+- warm cream background
+- pastel pink
+- soft blue
+- yellow
+- green
+- purple accents
+- rounded cards
+- sticker-style labels
+- offset shadows
+- serif display typography
+- simple sans-serif interface text
 
-## Option B — Weather Command Desk
-
-A dark operational interface designed to feel like a weather decision console.
-
-## Option C — Forecast Passport / Travel Brief
-
-A warm editorial interface inspired by travel documents and personal briefing sheets.
-
-I selected **Option C — Forecast Passport / Travel Brief**.
-
-The final design makes the recommendation the most important part of the page while keeping the weather numbers available as supporting evidence.
-
-The main design principle is:
-
-> **The weather data supports the decision. The recommendation is the answer.**
-
-The interface uses:
-
-- Warm paper-colored background
-- Editorial typography
-- Navy and blue accents
-- Strong borders and rules
-- A two-column recommendation and forecast layout
-- Minimal decoration
-- No shadows or gradients
-- Responsive single-column mobile layout
+The result is meant to feel like a small personal fashion and weather brief rather than a normal weather application.
 
 ---
 
-# Where the Final Result Differed From What I Expected
+# Design Process
 
-I originally expected the project to look more like a normal weather dashboard with weather values as the main focus.
+I created three trial design directions before choosing the main direction.
 
-After comparing the three design directions, I changed the hierarchy.
+## Option A
 
-The final direction treats the weather information as supporting evidence and makes the clothing recommendation the main answer.
+Editorial Weather Brief
 
-This made more sense for the purpose of the tool because the user is not opening it only to see the temperature. The user is opening it to decide what to wear and what to bring.
+This version was very clean and editorial, but felt slightly too serious.
 
----
+## Option B
 
-# AI Output I Did Not Accept As-Is
+Weather Command Desk
 
-## Required Question
+This version had a darker operational/dashboard appearance.
 
-### Pick one piece of AI output you did not accept as-is. What did it give you, what did you change, and how did you know it needed changing?
+It made the weather information strong, but the project started to feel more like a traditional weather tool.
 
-AI generated three different visual directions for the Weather Outfit Planner.
+## Option C
 
-I did not accept the first design automatically.
+Forecast Passport
 
-Option A was clean and editorial, but it still felt close to a traditional forecast page.
+This direction made the outfit recommendation more important than the raw forecast.
 
-Option B was visually distinctive, but its dark command-center style made the tool feel more technical and operational than I wanted.
+I selected Option C as the base direction.
 
-I selected Option C, **Forecast Passport / Travel Brief**, because it made the recommendation feel like the main result while the raw weather information remained available as supporting evidence.
-
-I knew the earlier directions needed changing because the purpose of this project is not simply to display weather data. It is to help the user make a decision from that data.
-
-After choosing Option C, I removed Options A and B and used Option C as the foundation for `DESIGN.md` and the final interface.
-
-### Commit
-
-**Replace this line with the real Option C commit URL before final submission:**
-
-```text
-https://github.com/ashmohaghegh05/weather-outfit-planner/commit/PASTE-COMMIT-HASH-HERE
-```
+The final interface later evolved further into a more colorful, playful version while keeping the Forecast Passport idea and recommendation-first hierarchy.
 
 ---
 
-# Error Handling
+# How the Final Version Changed From the Original Plan
 
-Every API request is designed to use:
+The original proposal focused mainly on:
 
+- city
+- forecast
+- clothing recommendation
+
+As I built and tested the project, I expanded the tool to include:
+
+- specific date
+- specific time
+- occasion
+- destination local time
+- hourly weather
+- humidity
+- snowfall
+- more detailed rain and wind logic
+- exact outfit pieces
+- city/state/country display
+- a playful final visual design
+
+The original proposal remains in the repository to show where the project started.
+
+---
+
+# Technology
+
+The project uses:
+
+- HTML
+- CSS
+- JavaScript
+- Open-Meteo API
+
+It does not use:
+
+- frameworks
+- external JavaScript libraries
+- an API key
+
+---
+
+# JavaScript Concepts Used
+
+The project uses concepts covered in class, including:
+
+- variables
+- arrays
+- objects
+- conditional statements
+- functions
+- DOM manipulation
+- event listeners
 - `fetch()`
 - `async`
 - `await`
@@ -305,34 +376,117 @@ Every API request is designed to use:
 - `response.ok`
 - `.json()`
 
-The page does not assume every request will succeed.
+---
 
-If a request fails, the interface shows an inline error instead of crashing or using an `alert()` box.
+# Main API Flow
+
+The main program flow is:
+
+`User Input`
+
+↓
+
+`Submit Event`
+
+↓
+
+`Validate Input`
+
+↓
+
+`Fetch Location`
+
+↓
+
+`Get Latitude + Longitude`
+
+↓
+
+`Fetch Hourly Forecast`
+
+↓
+
+`Find Selected Forecast Hour`
+
+↓
+
+`Evaluate Weather + Occasion`
+
+↓
+
+`Build Exact Outfit`
+
+↓
+
+`Render Result`
 
 ---
 
-# Technology
+# Project Files
 
-This project uses:
+The main files include:
 
-- HTML
-- CSS
-- Vanilla JavaScript
-- Open-Meteo Geocoding API
-- Open-Meteo Forecast API
-- `fetch()`
-- `async` / `await`
-- `try/catch`
-- DOM manipulation
+- `index.html`
+- `style.css`
+- `script.js`
+- `PROPOSAL.md`
+- `PRD.md`
+- `DESIGN.md`
+- `AGENTS.md`
+- `README.md`
+- `option-c.html`
 
-The project does **not** use:
+---
 
-- React
-- Tailwind
-- Bootstrap
-- External JavaScript libraries
-- A database
-- A backend
-- An API key
+# AI Reflection
 
-Everything
+## One AI output I did not accept as-is
+
+One AI output I did not accept as-is was the first design direction.
+
+The generated design options helped me compare different approaches, but I did not simply keep the first suggestion.
+
+I compared the three trial pages and chose **Option C: Forecast Passport** because it made the recommendation more important than the raw weather data.
+
+I later changed the design again because the initial Forecast Passport version felt too formal for the final project.
+
+I changed:
+
+- the color palette
+- card shapes
+- button styling
+- labels
+- shadows
+- outfit presentation
+- overall personality
+
+The final version uses a more playful and colorful interface while keeping the useful structure from Option C.
+
+I knew these changes were better because the purpose of the tool is not just to read weather numbers. The user should be able to quickly see **what to wear and why**.
+
+### Commit showing this design decision
+
+**Replace the link below with the actual GitHub URL for your `Create option-c.html` commit before submission:**
+
+`PASTE-OPTION-C-COMMIT-URL-HERE`
+
+---
+
+# What I Learned
+
+This project helped me understand how an application can use API data to answer a practical question instead of only displaying the data.
+
+I also practiced using two API requests together:
+
+1. one request to find a location
+2. another request to get weather for that location
+
+The most important part was turning the forecast into a useful decision.
+
+Instead of stopping at:
+
+**“It will be 48°F.”**
+
+the application answers:
+
+**“What exactly should I wear?”**
