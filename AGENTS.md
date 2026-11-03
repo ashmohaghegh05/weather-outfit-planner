@@ -1,512 +1,755 @@
-# Agent Instructions
+# AGENTS.md
 
 ## Project
 
-This repository contains Mini Project 3: Weather Outfit Planner.
-
-The tool looks up weather forecast data using Open-Meteo and turns that data into a practical recommendation for what to wear and what to bring.
-
-Before changing anything, read:
-
-1. `PROPOSAL.md`
-2. `PRD.md`
-3. `DESIGN.md`
-
-These files define what the project should do and how it should look.
-
----
+Weather Outfit Planner
 
 ## Main Rule
 
-Use the simplest code that works, and add nothing I did not ask for.
+Use the simplest code that works.
 
-The project should remain easy enough for me to explain during the class walkthrough.
+Do not add features that were not requested.
 
-Do not add advanced patterns, abstractions, frameworks, libraries, or extra features unless they are necessary.
-
----
-
-## Design Rules
-
-Follow `DESIGN.md`.
-
-The final visual direction is:
-
-**Forecast Passport / Travel Brief**
-
-Main design rule:
-
-> The weather data supports the decision. The recommendation is the answer.
-
-The recommendation should be more visually important than the raw forecast numbers.
-
-Do not redesign the project into a generic weather dashboard.
+Keep the project easy to read, easy to explain, and easy to debug.
 
 ---
 
-## Technology Rules
+# Project Purpose
+
+Weather Outfit Planner helps a user decide exactly what to wear for a specific place, date, time, and occasion.
+
+The application:
+
+1. looks up a location
+2. gets its local weather forecast
+3. finds the forecast closest to the user's selected time
+4. evaluates the weather conditions
+5. recommends one specific outfit
+
+The weather data supports the decision.
+
+**The outfit is the main answer.**
+
+---
+
+# Required Technology
 
 Use only:
 
 - HTML
 - CSS
-- Vanilla JavaScript
+- JavaScript
 
 Do not use:
 
+- frameworks
 - React
 - Vue
-- Angular
-- Tailwind
 - Bootstrap
-- jQuery
-- External JavaScript libraries
+- external JavaScript libraries
 - CDN libraries
-- Databases
-- Backend code
-- Server code
 
-Everything should run directly in the browser and deploy on GitHub Pages.
+Keep all code readable for a beginner JavaScript course.
 
 ---
 
-## API Rules
+# Main Files
+
+The main project files are:
+
+- `index.html`
+- `style.css`
+- `script.js`
+- `PROPOSAL.md`
+- `PRD.md`
+- `DESIGN.md`
+- `AGENTS.md`
+- `README.md`
+- `option-c.html`
+
+Do not create unnecessary files.
+
+---
+
+# API
 
 Use Open-Meteo.
 
-The project may use:
+Documentation:
 
-- Open-Meteo Geocoding API
-- Open-Meteo Forecast API
+https://open-meteo.com/en/docs
 
-The project does not require an API key.
-
-Do not add any API key.
-
-Do not add another weather API unless I explicitly ask for one.
-
-Before using an API field, make sure it exists in the real API response.
-
-Do not guess field names.
+The project uses two API requests.
 
 ---
 
-## Fetch Rules
+## 1. Geocoding API
 
-Every API request must:
+Use the user's location input to find:
 
-- Use `fetch()`
-- Use `await`
-- Be inside `try/catch`
-- Check `response.ok`
-- Convert the response using `.json()`
+- city name
+- state or region
+- country
+- latitude
+- longitude
+- timezone
 
-If `response.ok` is false, throw an error so the page can show the error state.
+The user may enter a more specific location such as:
 
-Keep the fetch logic easy to read.
+`Boston, MA`
+
+or:
+
+`Karachi, Pakistan`
+
+Use `encodeURIComponent()` when placing user input inside the API URL.
 
 ---
 
-## Expected Files
+## 2. Weather Forecast API
 
-Keep the project simple.
+Use the latitude and longitude from the geocoding result.
 
-Expected main files:
+Request hourly values for:
 
-```text
-index.html
-style.css
-script.js
-PROPOSAL.md
-PRD.md
-DESIGN.md
-AGENTS.md
-README.md
-option-c.html
+- `temperature_2m`
+- `apparent_temperature`
+- `relative_humidity_2m`
+- `precipitation_probability`
+- `snowfall`
+- `weather_code`
+- `wind_speed_10m`
+
+Use:
+
+`timezone=auto`
+
+so forecast timestamps use the destination's local timezone.
+
+Use Fahrenheit for temperature and mph for wind because the current interface is designed around those units.
+
+---
+
+# Fetch Rules
+
+Every fetch request must:
+
+1. be inside an async function
+2. use `await`
+3. check `response.ok`
+4. call `.json()`
+5. be handled through `try/catch`
+
+Example pattern:
+
+```javascript
+const response = await fetch(url);
+
+if (!response.ok) {
+    throw new Error("Request failed");
+}
+
+const data = await response.json();
 ```
 
-Do not create unnecessary folders or files.
+Do not assume a failed HTTP request will automatically throw an error.
 
 ---
 
-## Main User Flow
+# User Inputs
 
-The user should:
+The user chooses:
 
-1. Enter a city.
-2. Submit the search.
-3. See a loading state.
-4. Have the city converted into coordinates using the geocoding API.
-5. Have the forecast loaded using the forecast API.
-6. See a weather-based clothing recommendation.
-7. See the supporting forecast data.
-8. Be able to search again without reloading the page.
+- city or area
+- date
+- time
+- occasion
 
----
+Available occasions:
 
-## Input Validation
+- Interview
+- Class
+- Casual
+- Outdoor
 
-The city field is required.
-
-Before sending any API request:
-
-1. Read the input.
-2. Trim extra spaces.
-3. Check whether it is empty.
-
-If the city is empty:
-
-- Do not fetch anything.
-- Show an inline error.
-- Keep the form usable.
-- Do not use `alert()`.
+Do not remove these inputs unless specifically requested.
 
 ---
 
-## Required States
+# Date Rules
 
-Support every state defined in `PRD.md`.
+Only allow dates within the forecast range used by the project.
 
-### Empty State
+The current application allows:
 
-Before a city is searched:
+- today
+- up to 15 days after today
 
-- Show the hero.
-- Show the search form.
-- Show a simple starting message.
-- Do not show fake weather data.
+The date limits should be created with JavaScript.
 
-### Loading State
-
-While the API requests are running:
-
-Show:
-
-**Checking the forecast...**
-
-Keep the page stable and usable.
-
-### Invalid Input State
-
-If the city field is empty:
-
-Show:
-
-**Enter a city before searching.**
-
-Do not send a request.
-
-### No Results State
-
-If no city is found:
-
-Show:
-
-**No matching city was found. Try a different search.**
-
-Do not request forecast data without valid coordinates.
-
-### Error State
-
-If an API request fails:
-
-Show:
-
-**The forecast could not be loaded. Please try again.**
-
-Keep the search form available.
-
-### In-Use State
-
-When requests succeed, show:
-
-- City
-- Country
-- Weather description
-- High temperature
-- Low temperature
-- Apparent temperature
-- Rain probability
-- Wind speed
-- Outfit recommendation
-- What to bring
+Do not hard-code actual calendar dates.
 
 ---
 
-## Recommendation Logic
+# Time Rules
 
-The page must work out an answer from the API data.
+The forecast API returns hourly weather data.
 
-Do not only display weather values.
+The application should find the hourly forecast closest to the user's chosen time.
 
-Use simple conditional logic.
+The result should clearly state that the time is:
 
-Possible rules:
-
-### Cold
-
-Recommend:
-
-- Warm coat
-- Layers
-
-### Cool
-
-Recommend:
-
-- Light jacket
-- Extra layer if needed
-
-### Mild
-
-Recommend:
-
-- Normal clothing
-- Optional light layer
-
-### Hot
-
-Recommend:
-
-- Light clothing
-- Heat-conscious preparation
-
-### Rain
-
-If rain probability is high:
-
-Recommend:
-
-- Umbrella
-- Rain-ready shoes or outerwear when appropriate
-
-### Wind
-
-If wind speed is high:
-
-Recommend:
-
-- Wind-resistant outer layer
-
-Use apparent temperature when it better represents how the weather will feel.
-
-Keep the rules understandable.
-
-Do not create a complicated scoring system unless necessary.
+**DESTINATION LOCAL TIME**
 
 ---
 
-## JavaScript Structure
+# Outfit Logic
 
-Prefer small, clearly named functions.
+The application must not simply display raw weather data.
 
-Possible functions include:
+It must work out an outfit.
 
-```text
-searchLocation()
-fetchForecast()
-createRecommendation()
-getWeatherDescription()
-showLoading()
-showMessage()
-renderWeather()
+The recommendation should depend on:
+
+- occasion
+- apparent temperature
+- humidity
+- precipitation probability
+- snow
+- wind
+- weather condition
+
+---
+
+# Exact Outfit Structure
+
+Each recommendation should contain:
+
+- Top
+- Bottom
+- Mid Layer
+- Outer Layer
+- Shoes
+- Accessories
+
+Use actual garment descriptions.
+
+Good:
+
+`Light-blue Oxford shirt`
+
+Bad:
+
+`Wear something professional`
+
+Good:
+
+`Dark navy wool overcoat`
+
+Bad:
+
+`Wear a warm layer`
+
+Good:
+
+`Black water-resistant leather loafers`
+
+Bad:
+
+`Wear good shoes`
+
+The user should be able to read the result and know what outfit to assemble.
+
+---
+
+# Occasion Logic
+
+## Interview
+
+Recommendations should remain professional.
+
+Possible garments include:
+
+- Oxford shirt
+- tailored trousers
+- blazer
+- trench coat
+- wool coat
+- leather loafers
+- derby shoes
+
+Weather protection may change the outer layer or shoes.
+
+---
+
+## Class
+
+Recommendations should prioritize:
+
+- comfort
+- practical layering
+- easy everyday clothing
+
+Possible garments include:
+
+- T-shirt
+- jeans
+- chinos
+- sweater
+- overshirt
+- bomber jacket
+- sneakers
+
+---
+
+## Casual
+
+Recommendations should be relaxed but coordinated.
+
+Possible garments include:
+
+- linen shirt
+- T-shirt
+- chinos
+- jeans
+- overshirt
+- lightweight jacket
+- sneakers
+
+---
+
+## Outdoor
+
+Recommendations should prioritize:
+
+- comfort
+- weather protection
+- movement
+- practical materials
+
+Possible garments include:
+
+- thermal base layer
+- performance T-shirt
+- fleece
+- hiking trousers
+- shell jacket
+- trail shoes
+- hiking boots
+
+---
+
+# Weather Adjustments
+
+## High Humidity
+
+When humidity is high and the weather is warm:
+
+- choose breathable fabrics
+- reduce unnecessary layers
+- use cotton, linen, or moisture-wicking materials
+
+---
+
+## Rain
+
+When precipitation probability is high:
+
+- use rain-resistant outerwear
+- adjust footwear
+- add an umbrella when wind is not too strong
+
+If wind is strong, prefer hooded rain protection rather than relying only on an umbrella.
+
+---
+
+## Snow
+
+When snow is expected:
+
+- use insulated outerwear
+- use waterproof footwear
+- add warm socks
+- add gloves
+
+---
+
+## Strong Wind
+
+When wind is strong:
+
+- use a wind-blocking outer layer
+
+Do not leave the recommendation with "no outer layer" if strong wind makes a layer necessary.
+
+---
+
+## Very Cold Weather
+
+Add useful cold-weather accessories such as:
+
+- gloves
+- scarf
+- warm socks
+
+---
+
+## Hot Weather
+
+Use:
+
+- lighter fabrics
+- fewer layers
+- breathable clothing
+
+A water bottle may be added as an accessory.
+
+---
+
+## Sunny Weather
+
+Sunglasses may be added when conditions are clear and warm enough.
+
+---
+
+# Weather Codes
+
+Use a simple helper function to convert Open-Meteo weather codes into readable conditions.
+
+Examples:
+
+- Clear sky
+- Mainly clear
+- Partly cloudy
+- Overcast
+- Fog
+- Drizzle
+- Rain
+- Snow
+- Rain showers
+- Snow showers
+- Thunderstorm
+
+Do not display raw weather-code numbers to the user.
+
+---
+
+# Application States
+
+The following states must remain supported.
+
+---
+
+## Empty State
+
+Before the user submits the form.
+
+Show guidance explaining what information to enter.
+
+---
+
+## Loading State
+
+Show while the API calls are running.
+
+Example:
+
+**Preparing your outfit...**
+
+Do not leave the previous result visible while a new request is loading.
+
+---
+
+## Invalid Input
+
+Show when:
+
+- location is missing
+- date is missing
+- time is missing
+- occasion is missing
+- date is outside the allowed range
+
+Give the user a clear message explaining what must be corrected.
+
+---
+
+## No Results
+
+Show when the geocoding API cannot find a location.
+
+Suggest adding:
+
+- state
+- region
+- country
+
+---
+
+## Error State
+
+Show if an API request fails or expected forecast data is missing.
+
+Do not expose technical error details directly to the user.
+
+Technical errors may be logged with:
+
+```javascript
+console.error(error);
 ```
 
-The exact names may change.
+---
 
-Do not put the whole project inside one giant function.
+## In Use State
 
-Do not compress multiple important steps into one unreadable line.
+Show:
+
+- destination
+- date
+- time
+- occasion
+- weather condition
+- exact outfit
+- explanation
+- local weather metrics
+- Before You Leave items
 
 ---
 
-## Course Concepts to Prefer
+# Rendering Rules
 
-Prefer concepts covered in class:
-
-- `const`
-- `let`
-- Strings
-- Numbers
-- Booleans
-- Arrays
-- Objects
-- Functions
-- Parameters
-- `return`
-- `if`
-- `else if`
-- `else`
-- Comparison operators
-- Logical operators
-- `addEventListener()`
-- `querySelector()`
-- `createElement()`
-- `textContent`
-- `fetch()`
-- `async`
-- `await`
-- `try/catch`
-- `response.ok`
-- `.json()`
-
-If a new method is necessary, explain what it does and why it is needed.
-
----
-
-## DOM Safety
-
-Use `textContent` for text shown on the page.
-
-Do not place API or user-entered values into the page using unsafe `innerHTML`.
-
-Treat outside data as untrusted.
-
----
-
-## Error Handling
-
-Do not allow a failed API request to crash the page.
-
-Use `try/catch`.
-
-The `catch` block should:
-
-- Show a useful inline message
-- Keep the form available
-- Allow the user to try again
-
-Use `console.log()` temporarily during debugging if necessary.
-
-Remove unnecessary debugging logs from the final version.
-
----
-
-## HTML Rules
-
-Use semantic HTML where appropriate.
+Use JavaScript to create and render result content.
 
 Prefer:
 
-- `<header>`
-- `<main>`
-- `<section>`
-- `<form>`
-- `<label>`
-- `<article>`
-- `<aside>`
-- `<footer>`
+- `document.createElement()`
+- `.textContent`
+- `.appendChild()`
 
-Every input must have a visible `<label>`.
+Do not insert user-provided text into the page with unsafe HTML.
 
-Do not rely only on placeholder text.
+Avoid unnecessary use of `innerHTML`.
 
----
+Using:
 
-## Accessibility
+```javascript
+resultArea.innerHTML = "";
+```
 
-The page must be keyboard usable.
-
-Keep visible focus styles.
-
-Do not communicate important information with color alone.
-
-Buttons must use descriptive labels.
-
-Error messages should clearly explain what the user can do next.
-
-Maintain readable contrast.
+to clear an existing result is acceptable.
 
 ---
 
-## Responsive Design
+# Design Direction
 
 Follow `DESIGN.md`.
 
-On desktop:
+The final design should feel:
 
-- Use a strong editorial hero
-- Use a two-column result layout
-- Recommendation on the left
-- Supporting forecast data on the right
+- playful
+- colorful
+- cute
+- editorial
+- organized
 
-On mobile:
+Use:
 
-- Use one column
-- Make search controls easy to tap
-- Keep the recommendation before supporting forecast details
-- Avoid horizontal scrolling
-
----
-
-## Visual Restrictions
-
-Do not add:
-
-- Gradients
-- Glassmorphism
-- Drop shadows
-- Animated weather backgrounds
-- Floating clouds
-- Rain animations
-- Stock illustrations
-- Giant weather icons
-- Pill-shaped controls
-- Excessive rounded corners
-- External fonts
-- Multiple competing accent colors
-
-Use the colors, typography, borders, spacing, and hierarchy defined in `DESIGN.md`.
+- warm cream background
+- pastel pink
+- soft blue
+- soft yellow
+- green
+- purple accents
+- rounded cards
+- pill-shaped labels
+- offset shadows
+- serif headings
+- sans-serif interface text
 
 ---
 
-## Editing Rules
+# Design Priority
 
-When I ask for one change:
+The recommendation should visually dominate the weather data.
 
-- Change only what is necessary.
-- Preserve working functionality.
-- Do not redesign unrelated sections.
-- Preserve `DESIGN.md`.
-- Do not add features I did not request.
+The order of importance is:
 
-If a requested change conflicts with `PRD.md` or `DESIGN.md`, point it out before making a major change.
+1. exact outfit
+2. destination and occasion
+3. explanation
+4. local weather conditions
+5. accessories / Before You Leave
 
----
-
-## Testing
-
-Important tests:
-
-1. Search a valid city.
-2. Confirm the loading state appears.
-3. Confirm geocoding returns the correct location.
-4. Confirm forecast data loads.
-5. Confirm the recommendation is based on the returned data.
-6. Submit an empty city.
-7. Search for a city that does not exist.
-8. Test the error state with the browser set to Offline.
-9. Search again after an error.
-10. Test on a narrow/mobile screen.
-11. Confirm there is no horizontal scrolling.
+Do not redesign the page into a traditional weather dashboard.
 
 ---
 
-## Walkthrough Preparation
+# Responsive Design
 
-The final JavaScript should be readable enough that I can explain:
+The project must work on:
 
-- Why there are two API requests
-- What the geocoding API returns
-- How latitude and longitude are used
-- What `fetch()` does
-- Why `await` is used
-- Why the function needs `async`
-- Why `response.ok` is checked
-- What `.json()` does
-- Why `try/catch` is used
-- How the recommendation is calculated
-- What happens when a city is not found
-- What happens if a fetch line or condition is removed
+- desktop
+- tablet
+- mobile
 
-Prefer understandable code over clever code.
+On smaller screens:
+
+- stack form fields
+- stack result cards
+- keep text inside the viewport
+- make button full width when useful
+- stack outfit label/value rows
+- remove decorative rotation if it hurts readability
+
+---
+
+# Accessibility
+
+Keep:
+
+- semantic HTML
+- form labels
+- keyboard-accessible controls
+- visible focus states
+- readable contrast
+- `aria-live` on changing messages and result areas
+
+Do not communicate important information through color alone.
+
+---
+
+# Code Style
+
+Keep functions focused on one responsibility.
+
+Suggested function structure:
+
+- `setDateLimits()`
+- `searchLocation()`
+- `fetchForecast()`
+- `getWeatherForTime()`
+- `createRecommendation()`
+- `getWeatherDescription()`
+- `renderWeather()`
+- `addOutfitRow()`
+- `addMetric()`
+- state helper functions
+
+Use descriptive variable names.
+
+Avoid deeply nested code when a helper function makes the logic easier to understand.
+
+---
+
+# Comments
+
+Use comments to separate major parts of the JavaScript.
+
+Example:
+
+```javascript
+/* ---------------------------------
+   WEATHER API
+--------------------------------- */
+```
+
+Do not comment every individual line.
+
+Comments should help someone understand the structure of the file.
+
+---
+
+# Security
+
+There is no API key required for Open-Meteo.
+
+Do not add an API key to this project.
+
+Do not commit secrets or tokens.
+
+User input should be encoded before it is added to a URL.
+
+---
+
+# Testing
+
+Before considering the project finished, test:
+
+### Normal request
+
+Example:
+
+- Boston, MA
+- valid date
+- 9:00 AM
+- Interview
+
+Check that the full outfit appears.
+
+### Different occasion
+
+Use the same location/weather but choose another occasion.
+
+The outfit should change.
+
+### Hot location
+
+Confirm lighter outfit recommendations appear.
+
+### Cold location
+
+Confirm warmer layers appear.
+
+### Rain
+
+Confirm rain protection is added.
+
+### Invalid location
+
+Example:
+
+`asdfghjklxyz`
+
+Confirm the No Results state appears.
+
+### Missing field
+
+Confirm validation appears.
+
+### Mobile width
+
+Confirm the page remains readable and usable.
+
+---
+
+# Walkthrough Rule
+
+The code must remain simple enough that the student can explain:
+
+1. how the location API works
+2. how latitude and longitude are obtained
+3. how the weather API works
+4. why `await` is needed
+5. what `response.ok` checks
+6. what `.json()` does
+7. how the selected forecast hour is found
+8. how the weather conditions affect the outfit
+9. how JavaScript renders the final result
+
+Do not make the solution more technically complex than necessary.
+
+---
+
+# Final Principle
+
+The project should not behave like a normal weather app.
+
+The user is not primarily asking:
+
+**“What is the weather?”**
+
+The user is asking:
+
+**“What exactly should I wear there?”**
+
+Keep the project focused on answering that question.
